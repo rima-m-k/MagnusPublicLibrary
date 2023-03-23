@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const login = async (req, res) => {
     try {
 
+
         let email = req.body.email.trim();
         let password = req.body.password.trim();
         let designationID = req.body.designationID.trim();
@@ -16,18 +17,15 @@ const login = async (req, res) => {
         if (admin.length === 0) {
             res.status(401).send({message: "email not found"});
         } else {
-            const {designationId:sample} = admin[0].designationID;
-            // console.log(sample,"aa")
-            // console.log(admin[0])
-            console.log(Object.entries(admin[0].designationID))
-            // console.log(designationID)
-
+            
+            console.log(admin[0].designationID.designatinId)
+            
             let comparepassword = await bcrypt.compare(password, admin[0].password)
-            if (email === admin[0].email) {
-
+            if (email === admin[0].email) { 
+                console.log(comparepassword)
                 if (comparepassword) {
                     
-                    if (designationID === admin[0].designationID.designationID) {
+                    if (designationID === admin[0].designationID.designatinId) {
                          // res.cookie('token ', token); or local storage
                         const token= createToken(admin[0]._id)
                        
@@ -37,6 +35,7 @@ const login = async (req, res) => {
                              message: "logged in successfully"});
 
                     } else {
+                        console.log(admin[0].designationID.designatinId)
                         res.status(401).send({message: "invalid id"});
                     }
                 } else {
