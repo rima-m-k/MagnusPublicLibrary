@@ -1,10 +1,10 @@
 import React from "react";
-import NavigationBar from "../../components/NavigationBar";
+import SideBar from "../../components/SideBar";
 
 function Dashboard() {
   return (
     <>
-      <NavigationBar />
+      <SideBar />
     </>
   );
 }

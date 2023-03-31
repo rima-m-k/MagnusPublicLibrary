@@ -1,44 +1,55 @@
-import React, { useState,useEffect } from "react";
-import NavigationBar from "../../components/NavigationBar";
-import { addEmployee,fetchStaffID } from "../../services/serviceHelpers";
+import React, { useState, useEffect } from "react";
+import SideBar from "../../components/SideBar";
+import { addEmployee, fetchStaffID } from "../../services/adminServiceHelpers";
 
 function AddEmployee() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    designation: '',
+    newDesignation:'',
+    newDesignationID:''
   })
-  const [staffID,setStafFID] = useState('')
-
-  useEffect (()=>{
-   fetchStaffID()
-   .then( res => setStafFID(res.data))
-  },[])
+  const [staffID, setStafFID] = useState({})
+  const [error,setError] = useState('')
+  useEffect(() => {
+    fetchStaffID()
+      .then(res => setStafFID(res.data))
+  }, [])
   function handleFormData(e) {
     const name = e.target.name;
     const value = e.target.value;
     setFormData((values) => ({ ...values, [name]: value }));
-
-
   }
   function handleSubmit(e) {
     e.preventDefault();
     addEmployee(formData)
-    
+    .then( res =>{
+       console.log(res)
+       setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      designation: '',
+      newDesignation:'',
+      newDesignationID:''
+      });})
+    .catch(error => {
+      console.log(error.response.data.message)
+      setError(error.response.data.message)
+    })
   }
-  console.log(staffID)
+  console.log(formData)
+  let keys = Object.keys(staffID);
 
   return (
-
     <>
-      <NavigationBar />
-
+      <SideBar />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="w-full max-w-md">
-          <form  onSubmit={handleSubmit} className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
+          <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
             <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
-           
             <div className="mb-4">
               <label
                 htmlFor="firstName"
@@ -73,22 +84,6 @@ function AddEmployee() {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="designation"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Designation
-              </label>
-              <input
-                type="text"
-                name="designation"
-                value={formData.designation}
-                onChange={handleFormData}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
                 htmlFor="email"
                 className="block text-gray-700 font-bold mb-2"
               >
@@ -97,71 +92,82 @@ function AddEmployee() {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={formData.email.toLowerCase()}
                 onChange={handleFormData}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-4">
               <label
-                htmlFor="password"
+                htmlFor="designation"
                 className="block text-gray-700 font-bold mb-2"
               >
-                Password
+                Designation
               </label>
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="defaultPassword"
-                    name="password"
-                    value="default"
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                    onChange={handleFormData}
+              <div className="mb-4">
 
-                  />
-                  <label htmlFor="defaultPassword" className="text-gray-700">
-                    Use default password
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="newPassword"
-                    name="password"
-                    value="create"
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                    onChange={handleFormData}
-                  />
-                  <label htmlFor="newPassword" className="text-gray-700">
-                    Create new password
-                  </label>
-                  {/* {formData.password !== 'default' &&
-                    <input
-                      type="text"
-                      name="passwordField"
-                    
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />} */}
-
-                </div>
+                <select 
+                name="designation" 
+                id="designation " 
+                value={formData.designation}
+                onChange={handleFormData}
+                className="shadow  border rounded  w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"> 
+                <option>options</option>
+                  {keys.map(key => (
+                    <option key={key} value={staffID[key]._id}  > 
+                      {staffID[key].designation} 
+                    </option> 
+                      ))} 
+                    <option value={'addDesignation'}>Add new designation</option>
+                </select> 
               </div>
-
             </div>
+            <div className="mb-3">
+           
+            {formData.designation==='addDesignation' ? 
+            <>
+            <label htmlFor="newDesignation" className="block text-gray-700 font-bold mb-2" >
+                Designation Name
+              </label>
+              <input type='text' 
+              name="newDesignation" 
+              value={formData.newDesignation}
+              onChange={handleFormData}
+             
+              className="shadow  border rounded  w-full py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+
+<label htmlFor="newDesignationID" className="block text-gray-700 font-bold mb-2" >
+                Designation ID
+              </label>
+              <input type='text' 
+              name="newDesignationID" 
+              value={formData.newDesignationID.toUpperCase()}
+              onChange={handleFormData}
+              className="shadow  border rounded  w-full py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+
+
+              </>:null}
+            </div>
+
+
+
+          {error ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">{error}</div> : null}
             <div className="flex items-center justify-between">
+
               <button
                 type="submit"
-                className="bg-custom-green hover:bg-custom-olive text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-custom-blue  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                Login
+                Add
               </button>
             </div>
           </form>
         </div>
       </div >
     </>
-  );
+
+  )
 }
 
 export default AddEmployee;

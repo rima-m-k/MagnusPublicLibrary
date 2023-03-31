@@ -1,21 +1,33 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import NavMenu from "../../components/NavMenu";
+import { userLogin } from "../../services/userServiceHelpers";
 // import { Authenticate } from '../../auth/authentication';
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+  const Navigate = useNavigate()
+  const [userInfo,setUserInfo] = useState({
+    email:'',
+    password:''
+  })
+  const [error,setError] = useState('')
+  function handleChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    setUserInfo((values)=>({...values,[name]:value}));
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   await Authenticate(email, password); // call your authentication API function here
-    //   // redirect to dashboard page on successful login
-    //   // you can use React Router's useHistory hook to do this
-    // } catch (error) {
-    //   // handle any authentication errors here (e.g. display an error message)
-    // }
+   
+      userLogin(userInfo)
+      .then(res =>{ console.log(res)
+      setError(res.data.message)
+      })
+      .then(()=> Navigate('/'))
+      .catch(err => console.log(err))
+    //
+
+   
   };
 
   return (
@@ -38,8 +50,9 @@ function Login() {
               <input
                 type="email"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userInfo.email}
+                onChange={handleChange}
+
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
@@ -54,12 +67,14 @@ function Login() {
               <input
                 type="password"
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={userInfo.password}
+                onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
             </div>
+            {error ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">{error}</div> : null}
+
             <div className="flex items-center justify-between">
               <button
                 type="submit"

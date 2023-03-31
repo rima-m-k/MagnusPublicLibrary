@@ -17,7 +17,7 @@ function Footer() {
           <Link to="NoticeBoard" element={<Login />}>
             Venue Hire{" "}
           </Link>
-          <Link to="staffPortal" element={<StaffLogin />}>
+          <Link to="admin/staffPortal" element={<StaffLogin />}>
             Staff Portal{" "}
           </Link>
           <Link to="NoticeBoard" element={<Login />}>

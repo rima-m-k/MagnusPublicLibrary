@@ -15,7 +15,7 @@ const login = async (req, res) => {
         }
         let admin = await STAFFDATA.find({email: email}).populate("designationID");
         if (admin.length === 0) {
-            res.status(401).send({message: "email not found"});
+            res.status(401).send({message: "Email not found"});
         } else {
             
             console.log(admin[0].designationID.designatinId)
@@ -24,11 +24,12 @@ const login = async (req, res) => {
             if (email === admin[0].email) { 
                 console.log(comparepassword)
                 if (comparepassword) {
-                    
-                    if (designationID === admin[0].designationID.designatinId) {
+                    console.log(designationID,"desID")
+                    console.log(admin[0].designationID.designation,"adminID")
+                    if (designationID === admin[0].designationID.designationId) {
                          // res.cookie('token ', token); or local storage
                         const token= createToken(admin[0]._id)
-                       
+                        res.cookie('token ', token);
                         res.json({
                             token: token,
                             data:{email},
@@ -41,7 +42,7 @@ const login = async (req, res) => {
                 } else {
                     res.status(401).send({message: "invalid password"});
                 }
-            } else {
+            } else { 
                 res.status(401).send({message: "email not found"});
             }
 

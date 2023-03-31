@@ -1,13 +1,20 @@
 import "./App.css";
-// import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import CustomRoutes from "./routes/CustomRoutes";
+// import {  Route, Routes } from "react-router-dom";
+import AdminRoutes from "./routes/AdminRoutes";
+import UserRoutes from "./routes/UserRoutes";
+import AssistantRoutes from "./routes/AssistantRoutes";
+import { Route, Routes } from "react-router-dom";
+// import ErrorPage from "./pages/ErrorPage";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-      <CustomRoutes />
-      </BrowserRouter>
+
+   <Routes >  
+<Route path="/*" element={<UserRoutes />} />  
+<Route path="/admin/*" element={<AdminRoutes />} />  
+<Route path="/asst/*" element={<AssistantRoutes />} />  
+      
+        </Routes>
     </div>
   );
 }

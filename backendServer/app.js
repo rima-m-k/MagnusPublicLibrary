@@ -12,13 +12,15 @@ app.use(cookieParser());
 
 
 const user = require("./routes/user");
-app.use("/user", user);
+app.use("/", user);
 const admin = require("./routes/admin");
 app.use("/admin", admin);
+const assistant = require("./routes/assistant");
+app.use("/asst", assistant);
 
 app.use(session({secret: "its a secret", resave: false, saveUninitialized: true, maxAge: 60000}));
 
-
+app.use(express.static("public"));
 
 dotenv.config();
 const PORT = process.env.PORT || 8080;

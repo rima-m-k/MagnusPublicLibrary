@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const designations = new mongoose.Schema({
-    designatinId:{
+    designationId:{
         type:String,
     },
     designation : {

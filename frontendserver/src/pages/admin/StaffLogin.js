@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-// import { Navigate } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-import { staffLogin } from "../../services/serviceHelpers";
+import { Link, useNavigate } from "react-router-dom";
+import { staffLogin } from "../../services/adminServiceHelpers";
 
 function StaffLogin() {
   let [formData, setFormData] = useState({
@@ -14,16 +13,16 @@ function StaffLogin() {
 
   const Navigate = useNavigate();
 
-  function handleFormData(e) {
+  function handleFormData(e) {   
     const name = e.target.name;
     const value = e.target.value;
-    setFormData((values) => ({ ...values, [name]: value }));
+    setFormData((values) => ({ ...values, [name]: value })); 
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+(formData.designationID==='LBN01') ?staffLogin(formData).then(() => Navigate("/admin/dashboard")):staffLogin(formData).then(() => Navigate("/asst/dashboard"))
 
-    staffLogin(formData)
       
     .then((res) => {
       const data = {
@@ -93,6 +92,8 @@ function StaffLogin() {
             <label htmlFor="password" className="block font-medium mb-2">
               Password
             </label>
+            {/* <Link to="/asst/dashboard" className="text-white pb-5" element={<Dashboard />}>dash</Link> */}
+
             <input
               type="password"
               name="password"
@@ -117,7 +118,7 @@ function StaffLogin() {
               className="border-gray-400 bg-gray-100 border-b-2 block w-full rounded py-2 px-3 mb-1"
             />
           </div>
-          {error ? <div className="text-red-500 pb-2">{error}</div> : null}
+          {error ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">{error}</div> : null}
           <button
             type="submit"
             className="bg-custom-blue  text-white py-2 px-4 "
