@@ -17,4 +17,4 @@ function UserRoutes() {
   </Routes>
   )
 }
-export default UserRoutes
+export default UserRoutes 

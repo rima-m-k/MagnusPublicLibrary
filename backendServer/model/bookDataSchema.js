@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Genre= require("./genreDataSchema")
 const bookData = new mongoose.Schema({
     title: {
         type: String,
@@ -13,12 +13,13 @@ const bookData = new mongoose.Schema({
         type: String,
         required: true
     },
-    catalogueNumber: {
+    callNumber: {
         type: String,
         required: true
     },
     genre: {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref:Genre,
         required: true
     },
     publicationDate: {
