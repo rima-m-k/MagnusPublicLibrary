@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AddBOOk from "../pages/assistant/AddBook"
-function NavigationBar() {
+function AsstNavigationBar() {
   const [isOpen, setIsOpen] = useState({
     book:false,
     users:false,
@@ -97,4 +97,4 @@ view all users
   );
 }
 
-export default NavigationBar;
+export default AsstNavigationBar;

@@ -8,8 +8,6 @@ const addAuthor = async (req, res) => {
     let checkCode = await AUTHOR.findOne({
       AuthorCode: { $regex: req.body.AuthorCode, $options: "i" },
     });
-    console.log("checkauthor", checkAuthor);
-    console.log("checkcode", checkCode);
     if (checkAuthor) {
       res.status(409).send({ message: "Author name already exists" });
     } else {
@@ -26,7 +24,6 @@ const addAuthor = async (req, res) => {
           Bibliography: [],
         });
         let x = await authorData.save();
-        console.log(x);
         res.status(201).send({ message: "Successfully added to database" });
       }
     }

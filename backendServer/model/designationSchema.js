@@ -7,7 +7,6 @@ const designations = new mongoose.Schema({
     },
     designation : {
         type : String,
-        required : true
     },
    
 })

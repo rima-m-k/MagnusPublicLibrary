@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import Signup from "../pages/user/Signup";
 import Login from "../pages/user/Login";
 import LandingPage from "../pages/user/LandingPage";
+import AllBooks from "../pages/user/AllBooks";
 
 function NavMenu() {
+  const token = localStorage.getItem('currentUser');
   const [showMenu, setShowMenu] = useState(false);
 
   function toggleMenu() {
@@ -13,7 +15,7 @@ function NavMenu() {
   }
   return (
     <>
-      <nav className="flex flex-wrap items-center justify-between p-6 bg-custom-green">
+      <nav className="flex  items-center justify-between p-6 bg-custom-green">
         <div className="flex-shrink-0 text-white ">
           <Link to="/" element={<LandingPage />}>
             <span className="font-bold text-3xl">M</span>
@@ -47,29 +49,33 @@ function NavMenu() {
           }`}
           id="menu"
         >
-          <nav>
-            <Link to="/login" className="text-white pb-5" element={<Login />}>
+          <nav >
+            { !token &&
+            <>
+            
+            <Link to="/login" className="text-white p-5 m-2 " element={<Login />}>
               {" "}
               login{" "}
             </Link>
-            <Link to="/signup" className="text-white pb-5" element={<Signup />}>
+            <Link to="/signup" className="text-white p-5 m-2 " element={<Signup />}>
               {" "}
               Signup{" "}
             </Link>
-
-            <hr className="border-t border-white-300  w-full" />
-            <ul className="flex flex-wrap items-baseline justify-between text-base font-medium text-white">
+            <hr className="border-t border-white-300  m-3 w-full" />
+            </>
+}
+            <ul className="flex  items-center justify-around  font-medium text-xl text  text-white">
               <li>
                 <Link
-                  className="block mr-2 mt-2 md:inline-block md:mt-0 hover:text-white"
-                  to="#"
+                  className="block m-3 px-4 md:inline-block md:mt-0 hover:text-white"
+                  to="/bookList" element={<AllBooks />}
                 >
-                  Borrow
+               Borrow
                 </Link>
               </li>
               <li>
                 <Link
-                  className="block mr-2 mt-2 md:inline-block md:mt-0 hover:text-white"
+                  className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
                   to="#"
                 >
                   Events
@@ -77,7 +83,7 @@ function NavMenu() {
               </li>
               <li>
                 <Link
-                  className="block mr-2 mt-2 md:inline-block md:mt-0 hover:text-white"
+                  className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
                   to="#"
                 >
                   Community
@@ -85,7 +91,7 @@ function NavMenu() {
               </li>
               <li>
                 <Link
-                  className="block mr-2 mt-2 md:inline-block md:mt-0 hover:text-white"
+                  className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
                   to="#"
                 >
                   About
@@ -93,7 +99,7 @@ function NavMenu() {
               </li>
               <li>
                 <Link
-                  className="block mr-2 mt-2 md:inline-block md:mt-0 hover:text-white"
+                  className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
                   to="#"
                 >
                   Contact

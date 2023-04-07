@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SideBar from "../../components/SideBar";
+import SideBar from "../../components/AdminSideBar";
 import { addEmployee, fetchStaffID } from "../../services/adminServiceHelpers";
 
 function AddEmployee() {

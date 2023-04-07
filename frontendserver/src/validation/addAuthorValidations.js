@@ -14,7 +14,7 @@ function checkName(data){
     
     return err
 }
-function checkCode(data){
+function checkCode(data,limit){
     let err=null;
     const pattern = /[^A-Za-z]/g;
     const trimmedData = data.trim();
@@ -24,8 +24,8 @@ function checkCode(data){
         err="This field cannot be empty"
     }else if(pattern.test(trimmedData)){
         err="Code  cannot contain special characters or numbers"
-    }else if(trimmedData.length!== 3) {
-        err="Code must contain 3 letters"
+    }else if(trimmedData.length!== limit) {
+        err=`Code must contain ${limit} letters`
     } else err= null
     
     return err
@@ -38,7 +38,7 @@ function checkDate(data) {
     if(data>today){
       err="Invalid date"
     }
-return today
+return err
 
 }
 function checkNationality(data){
@@ -55,7 +55,7 @@ function checkNationality(data){
     return err
 }
 
-function checkBio (data){
+function checkTextarea (data){
     let err=null;
     const trimmedData = data.trim();
 
@@ -65,10 +65,13 @@ function checkBio (data){
 
     return err
 }
+
+
+
 module.exports = {
     checkName,
     checkCode,
     checkDate,
     checkNationality,
-    checkBio
+    checkTextarea
 }

@@ -1,45 +1,39 @@
 const mongoose = require("mongoose");
-const Genre= require("./genreDataSchema")
+const GENRE= require("./genreDataSchema")
+const AUTHOR =  require("./authorDataSchema")
 const bookData = new mongoose.Schema({
     title: {
         type: String,
-        required: true
     },
     author: {
-        type: String,
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref:AUTHOR,
     },
     publisher: {
         type: String,
-        required: true
     },
     callNumber: {
         type: String,
-        required: true
     },
     genre: {
         type: mongoose.Types.ObjectId,
-        ref:Genre,
-        required: true
+        ref:GENRE,
     },
     publicationDate: {
         type: String,
 
     },
-    availability: {
+    synopsis: {
         type: String,
-        required: true
-    },
-    notes: {
-        type: String,
-        required: true
     },
     copy: {
         type: String,
-        required: true
     },
     image:{
         type:Array
+    },
+    pages: {
+        type: String,
     },
    
 })

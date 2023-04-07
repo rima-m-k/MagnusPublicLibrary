@@ -15,7 +15,7 @@ function AssistantRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/addBook" element={<AddBook />} />
       <Route path="/addAuthor" element={<AddAuthors />} />
-      <Route path="/addGenre" element={<AddGenre />} />
+      <Route path="/addGenre" element={<AddGenre  />} />
 
 
       <Route path="*" element={<ErrorPage />} />

@@ -29,7 +29,7 @@ const login = async (req, res) => {
                     if (designationID === admin[0].designationID.designationId) {
                          // res.cookie('token ', token); or local storage
                         const token= createToken(admin[0]._id)
-                        res.cookie('token ', token);
+                        res.cookie('jwt ', token);
                         res.json({
                             token: token,
                             data:{email},

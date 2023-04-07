@@ -1,103 +1,90 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavMenu from "../../components/NavMenu";
+import NavMenu from "../../components/UserNavigation";
 import { userSignup } from "../../services/userServiceHelpers";
+import {checkEmail , checkPassword , checkName ,checkConfirmPswd} from "../../validation/FormValidation"
+import spinner from "../../spinner/UserSpinner.gif";
 
 
 
 const Signup = () => {
 
   const Navigate = useNavigate();
-
-  let [userData,setUserData] = useState({
-    name: "",
-    phone:"",
+//---------------------------------------------------------state declarations-------------------------------------------------------------
+  const [userData,setUserData] = useState({
+    name:"",
     email:"",
     password:"",
     cpassword :"",
-    address1:"",
-    address2:"", 
-    city:"",
-    state:"",
-    country:"",
-    pincode:"",
   })
-  const [file, setFile] = useState();
-  let [error,setError]= useState('')
+  const [nameError,setNameError] = useState('')
+  const [emailError,setEmailError] = useState('')
   const [passwordError,setPasswordError] = useState('')
+  const [cpasswordError,setcPasswordError] = useState('')
+  const [error,setError]= useState('')
+  const [isLoading, setIsLoading] = useState(false);
 
 
-  function checkPasswords(){
-    if(userData.password !== '' && userData.cpassword !==''){
-      setPasswordError('Passwords must be same')
-     }
-      if(userData.password === userData.cpassword){
-      setPasswordError('')
-     }
-
-  }
+ 
   function handleChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    } 
+   
        setUserData((values)=>({...values,[name]:value}));
-       
+       setError('')
+
   }
-  // console.log(file)
   function handleSubmit(e) {
     e.preventDefault();
-    const formdata= new FormData()
-    formdata.append("photo",file)
-    formdata.append('name',userData.name)
-    formdata.append('phone',userData.phone)
-    formdata.append('email',userData.email)
-    formdata.append('password',userData.password)
-    formdata.append('cpassword',userData.cpassword)
-    formdata.append('address1',userData.address1)
-    formdata.append('address2',userData.address2)
-    formdata.append('city',userData.city)
-    formdata.append('state',userData.state)
-    formdata.append('country',userData.country)
-    formdata.append('pincode',userData.pincode)
-if(passwordError !==''){
-  setError('check password and try again')
+if(nameError ||  emailError || passwordError || cpasswordError ){
+  setError('Form contains invalid details . Try again later')
 }else{
-  userSignup(formdata)
-  .then(res => {console.log(res)
-    if(res.data.message){
-setError(res.data.message)
-    }
-    
-    } )
-    
-    .then(res => {console.log(res)
-      setError(res.data.message)
-
-      Navigate('/login')
+  setIsLoading(true);
+  userSignup(userData)
+  .then(res => {
+    console.log(res)
+    const data = {
+      ...res.data.data,
+      token: res.data.token,
+    };
+    localStorage.setItem("currentUser", JSON.stringify(data));
+    Navigate("/")
     })
-    .catch(err => console.log(err))
+    .catch((err) =>{
+      console.log(err)
+      setError(err.response.message)
+    })
+    .finally(()=>{
+      setIsLoading(false);
+      setUserData({
+        name:" ",
+        email:"",
+        password:"",
+        cpassword :"",
+      })
+    })
+    
+    
 }
 
   
   }
 
-  return (
+  return ( 
     <> 
       <NavMenu />
-      <div className="container m-auto mb-4 ">
-        <h1 className="text-center text-3xl font-semibold  my-5 py-5 ">
-          Signup & Get Library Card
+      <div className="    min-h-screen">
+        <h1 className="text-center  font-bold mb-6 text-slate-800  border-x-gray-500 text-3xl   m-5 pt-5 ">
+          SIGNUP
         </h1>
-       
-          <form className="flex flex-col md:flex-row w-3/4 shadow-2xl  mx-auto " onSubmit={handleSubmit}>
-          <div className="md:w-1/2 px-4 mt-5">
-            {/* Left column content */}
-              <div className="mb-4">
+        <div className="flex flex-col items-center   min-h-screen ">
+        <div className="w-full max-w-md">
+          <form className="  shadow-neutral-500 shadow-2xl rounded px-8  pb-8 my-4 " onSubmit={handleSubmit}>
+         
+              <div className="my-4">
                 <label
                   htmlFor="name"
-                  className="block text-gray-700 font-bold mb-2"
+                  className="block text-gray-700 font-bold mb-4 pt-4"
                 >
                  Full Name
                 </label>
@@ -108,26 +95,12 @@ setError(res.data.message)
                   required
                   value={userData.fullname}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
+                  onKeyUp={e=> setNameError(checkName(e.target.value))}
+                  className="w-full px-3 py-2 text-gray-900  rounded-md border-2"
                 />
+                {nameError && <span className="text-red-600"> {nameError}</span>}
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="phone"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Phone
-                </label>
-                <input
-                  type="number"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={userData.phone}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
+              
               <div className="mb-4">
                 <label
                   htmlFor="email"
@@ -142,9 +115,25 @@ setError(res.data.message)
                   required
                   value={userData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
+                  onKeyUp={e=> setEmailError(checkEmail(e.target.value))}
+                  className="w-full px-3 py-2 text-gray-900 border-2 rounded-md"
+                  />
+                {emailError && <span className="text-red-600"> {emailError}</span>}
+
               </div>
+               {/* /////////////////////////////////////  spinner   //////////////////////////////////////////////// */}
+            {isLoading && (
+              <div className="relative">
+                {" "}
+                <div className="absolute  inset-0  flex justify-center items-center z-50">
+                  <div className=" rounded-full h-20 w-20  ">
+                    <img src={spinner} className="w-50 h-auto" alt="loading" />
+                  </div>
+                </div>{" "}
+              </div>
+            )}
+            {/* /////////////////////////////////////  spinner end   //////////////////////////////////////////////// */}
+
               <div className="mb-4">
                 <label
                   htmlFor="password"
@@ -159,8 +148,12 @@ setError(res.data.message)
                  required
                   value={userData.password}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
+                  onKeyUp={e=> setPasswordError(checkPassword(e.target.value,userData.email))}
+                  className="w-full px-3 py-2 text-gray-900 border-2 rounded-md"
+                  />
+                  
+                {passwordError && <span className="text-red-600"> {passwordError}</span>}
+
               </div>
               <div className="mb-4">
                 <label
@@ -176,136 +169,12 @@ setError(res.data.message)
                   required
                   value={userData.cpassword}
                   onChange={handleChange}
-                  onKeyUp={checkPasswords}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
+                  onKeyUp={e=> setcPasswordError(checkConfirmPswd(e.target.value,userData.password))}
+                  className="w-full px-3 py-2 text-gray-900 border-2 rounded-md"
                 />
-                {passwordError && <div className="text-red-500">{passwordError}</div>}
+                {cpasswordError && <div className="text-red-500">{cpasswordError}</div>}
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="photo"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Photo
-                </label>
-                <input
-                  type="file"
-                  id="photo"
-                  name="photo"
-                  required
-                  // value={userData.photo}
-                  onChange={handleChange}
-                  // className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-          </div>
-           
-          <div className="md:w-1/2 px-4 mt-5">
-           
-              {/* Right column content */}
-
-              <div className="mb-4">
-                <label
-                  htmlFor="address1"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Address Line 1
-                </label>
-                <input
-                  type="text"
-                  id="address1"
-                  name="address1"
-                  required
-                  value={userData.address1}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="address2"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Address Line 2
-                </label>
-                <input
-                  type="text"
-                  id="address2"
-                  name="address2"
-                  required
-                  value={userData.address2}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="city"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  City
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  required
-                  value={userData.city}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="state"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  State
-                </label>
-                <input
-                  type="text"
-                  id="state"
-                  name="state"
-                  required
-                  value={userData.state}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="country"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Country
-                </label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  required
-                  value={userData.country}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="pincode"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  PinCode
-                </label>
-                <input
-                  type="text"
-                  id="pincode"
-                  name="pincode"
-                  required
-                  value={userData.pincode}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-gray-900 bg-gray-100 rounded-md"
-                />
-              </div>
+ 
               {error ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">{error}</div> : null}
               <button
                 type="submit"
@@ -313,8 +182,9 @@ setError(res.data.message)
               >
                 &nbsp; Register &nbsp;
               </button>
-          </div>
             </form>
+            </div>
+            </div>
        
       </div>
     </>

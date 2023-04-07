@@ -1,13 +1,13 @@
 const USERDATA =  require('../../model/userSchema')
 const bcrypt = require('bcrypt')
-
+  
 async function userSignup (req,res) {
-    // console.log( req.body)
+    console.log( req.body)
 let checkUser= await USERDATA.findOne({email:req.body.email})
 console.log(checkUser)
-// if (!checkUser) {
-//     res.status(401).send({message: "Email not found"});
-// } else {
+if (!checkUser) {
+    res.status(401).send({message: "Email not found"});
+} else {
 if( checkUser && req.body.email === checkUser.email){
     res.json({message:"email already taken"})
 }else{
@@ -28,7 +28,7 @@ if( checkUser && req.body.email === checkUser.email){
     await user.save()
     res.json('successfully registered')
 } 
-// }
+}
 
 }
 module.exports ={userSignup}

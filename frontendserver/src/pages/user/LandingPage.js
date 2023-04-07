@@ -1,13 +1,31 @@
-import React from "react";
-import NavMenu from "../../components/NavMenu";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import NavMenu from "../../components/UserNavigation";
 import Footer from "../../components/Footer";
 import BackgroundBanner from "../../components/BackgroundBanner";
+import { fetchBook } from "../../services/userServiceHelpers";
+import {  setBooks } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchBook().then((res) => {
+      console.log(res.data.allBook)
+      dispatch(setBooks(res.data.allBook)); // dispatch the setBooks action with the fetched data
+      // console.log( setBooks(res.data))
+    });
+  }, [dispatch]);
+
   return (
     <>
       <NavMenu />
       <BackgroundBanner />
+      <button className="p-5 bg-black text-white" onClick={()=> navigate('/books') }> hello</button>
       <Footer />
     </>
   );

@@ -1,78 +1,132 @@
-// const bwipjs = require('bwip-js');
-// const { createCanvas } = require('canvas');
 const BOOK = require("../../model/bookDataSchema");
 const GENRE = require("../../model/genreDataSchema")
-
+const AUTHOR = require("../../model/authorDataSchema");
+const {  mongoose } = require("mongoose");
 const addBook = async (req, res) => {
   try {
-    let genreData= null
+    let callNumber,checkTitle,authorID=null , genreID=null,checkAuthor,genreCode,checkCode,newAuthor,checkGenreName,checkGenreCode,newGenre,hundreds,thousands,newBook,genreData
     console.log("body",req.body);
     console.log("file",req.files);
-    let book = await  BOOK.findOne({ title: req.body.title });
-    console.log("book",book)
-    if (book) {
-      res.status(209).send(" Book already exists in database");
-    } else {
-if(req.body.genre!=='other'){
- genreData = await GENRE.findById(req.body.genre)
-}else{
-let  newGenre = new GENRE({
-  genreCode:req.body.newGenreCode,
-  genreName:req.body.newGenre
-})
-  genreData= await  newGenre.save()
-}
-const genreCode = genreData.genreName.slice(0,1).toUpperCase();
-const authorCode = req.body.author.slice(0,2).toUpperCase();
-const beforeDeciaml = Math.floor(100 + Math.random() * 9000);
-const afterDecimal =  Math.floor(1000 + Math.random() * 9000);
-const callNumber = beforeDeciaml + "." + afterDecimal + " " + authorCode + "/" + genreCode
-console.log(callNumber)
+     checkTitle =  await BOOK.findOne({
+      title: { $regex: req.body.title, $options: "i" },
+    });
+    if(checkTitle){
+      console.log("book name already exists")
+    }else{
+       
+      //add new book
+      if(req.body.author === 'other'){
+         checkAuthor = await AUTHOR.findOne({
+          AuthorName: { $regex: req.body.newAuthorName, $options: "i" },
+        });
+         checkCode = await AUTHOR.findOne({
+          AuthorCode: { $regex: req.body.newAuthorCode, $options: "i" },
+        });
+        if (checkAuthor) {
+          console.log("author name already exists")
+        } else {
+          if (checkCode) {
+            console.log("author code already exists")
+          } else {
+             newAuthor = new AUTHOR({
+              AuthorName: req.body.newAuthorName,
+              AuthorCode: req.body.newAuthorCode.toUpperCase(),
+              Biography: req.body.newAuthorBiography,
+              Nationality: req.body.newAuthorNationality,
+              DateOfBirth: req.body.newAuthorDOB,
+              DateOfDeath: req.body.newAuthorDOD,
+              Bibliography: [],
+            });
+             authorID = await newAuthor.save();
+             console.log("addes author to db")
+          }
+        }
+        
 
-      let newBook = new BOOK({
-        title: req.body.title,
-        author: req.body.author,
-        publisher: req.body.publisher,
-        callNumber: callNumber,
-        genre: genreData._id,
-        publicationDate: req.body.publicationDate,
-        availability: req.body.availability,
-        notes: req.body.notes,
-        copy: req.body.copy,
-        image: req.files.frontCover,
-      });
-      await newBook.save();
+      }else{
+        authorID= await AUTHOR.findById(req.body.author)
+      }
+
+      if(req.body.genre === 'other'){
+        
+         genreCode = req.body.newGenreCode.toUpperCase();
+     checkGenreName = await GENRE.findOne({
+      genreName: { $regex: req.body.newGenreName, $options: "i" },
+    });
+     checkGenreCode = await GENRE.findOne({
+      genreCode: { $regex: genreCode, $options: "i" },
+    });
+    if (checkGenreName) {
+      console.log("genre name already exists")
+    } else {
+      if (checkGenreCode) {
+        console.log("genre code already exists")
+      } else {
+         newGenre = new GENRE({
+          genreCode: genreCode,
+          genreName: req.body.newGenreName,
+          description: req.body.newGenreDesc,
+          examples: [],
+        });
+
+         genreID = await newGenre.save();
+         console.log("addes genre to db")
+      }
     }
 
-    // Set the canvas renderer for bwip-js
-    // bwipjs.loadFont('helvetica', 14, require('canvas-prebuilt').registerFont('helvetica.ttf', { family: 'helvetica' }));
-    // bwipjs.Canvas = createCanvas;
+      }else{
+        genreID=await GENRE.findById(req.body.genre)
 
-    // Define the barcode options
-    // const barcodeOptions = {
-    //   bcid: 'code128', // barcode type
-    //   text: '123456789', // barcode data
-    //   scale: 3, // scaling factor
-    //   height: 10, // barcode height in mm
-    //   includetext: true, // include text or not
-    //   textxalign: 'center', // text horizontal alignment
-    //   textsize: 13, // text font size
-    // };
+         hundreds=Math.floor(100 + Math.random() * 9000)
+         thousands=Math.floor(1000 + Math.random() * 9000)
+ callNumber=hundreds+"."+thousands+" "+authorID.AuthorCode+"/"+genreID.genreCode
+      }
+     
 
-    // Generate the barcode image and save it to a file
-    // bwipjs.toBuffer(barcodeOptions, function (err, png) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     require('fs').writeFileSync('barcode.png', png);
-    //   }
-    // });
+       newBook = new BOOK({
+        title:req.body.title,
+        author:authorID._id,
+        publisher:req.body.publisher,
+       callnumber:callNumber,
+        genre:genreID._id,
+        publicationDate:req.body.publicationDate,
+        synopsis:req.body.synopsis,
+        copy:req.body.copy,
+        pages:req.body.pages,
+        image:req.files
+      })
+      newBook.save()
+console.log("added book to db")
+
+    }
+
+
   } catch (error) {
     console.log(error);
-    res.status(500);
   }
 };
 
+
+
+const fetchBookAndGenres= async (req,res) =>{
+  try {
+    let genreData= await GENRE.find()
+    let authorData =  await AUTHOR.find()
+    res.status(200).send({genreData,authorData})
+  } catch (error) {
+    console.log(error)
+    res
+      .status(500)
+      .send({
+        message:
+          "An unexpected error occurred while processing your request. Please try again later ",
+      });
+  }
+}
+
+
+
 module.exports = {
   addBook,
+  fetchBookAndGenres
 };

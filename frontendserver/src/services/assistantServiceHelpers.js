@@ -4,8 +4,12 @@ const client   = axios.create({baseURL: 'http://localhost:8000/asst' , timeout: 
 
 const  addBook = (bookData) =>   client.post('/addBook',bookData);
 const addAuthor = (authorData) => instance.post('/addAuthor',authorData);
+const addGenre = (genreData) => instance.post('/addGenre',genreData);
+const fetchBookAndGenres=() => instance.get('/addBook');
 
 export {
     addBook,
     addAuthor,
+    addGenre,
+    fetchBookAndGenres,
 };

@@ -1,20 +1,23 @@
 import {configureStore, createSlice} from '@reduxjs/toolkit' 
 
-const currentUserSlice= createSlice ({
-    name:"user details",
-    initialState:null,
-    reducers : {
-       
-        
+  
+  const bookSlice = createSlice({
+    name: "book",
+    initialState: null,
+    reducers: {
+      setBooks (state, action) {
+        console.log(action.payload);
+        return action.payload;
+      },
+    },
+  });
+  
+  const store=configureStore({
+    reducer:{
+        book:bookSlice.reducer,
     }
-})
-
-const store = configureStore ({
-reducer : {
-currentUser: currentUserSlice.reducer
-}
-})
+  })
 
 export default store;
-// export const { } = currentUserSlice.actions
+export const { setBooks } = bookSlice.actions
 
