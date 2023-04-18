@@ -11,15 +11,7 @@ import { useNavigate } from "react-router-dom";
 function LandingPage() {
 
   const navigate = useNavigate()
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    fetchBook().then((res) => {
-      console.log(res.data.allBook)
-      dispatch(setBooks(res.data.allBook)); // dispatch the setBooks action with the fetched data
-      // console.log( setBooks(res.data))
-    });
-  }, [dispatch]);
+  
 
   return (
     <>

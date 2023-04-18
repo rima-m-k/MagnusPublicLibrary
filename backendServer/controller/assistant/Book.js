@@ -81,19 +81,19 @@ const addBook = async (req, res) => {
          thousands=Math.floor(1000 + Math.random() * 9000)
  callNumber=hundreds+"."+thousands+" "+authorID.AuthorCode+"/"+genreID.genreCode
       }
-     
+     console.log(req.files.frontCover[0].filename)
 
        newBook = new BOOK({
         title:req.body.title,
         author:authorID._id,
         publisher:req.body.publisher,
-       callnumber:callNumber,
+        callNumber:callNumber,
         genre:genreID._id,
         publicationDate:req.body.publicationDate,
         synopsis:req.body.synopsis,
         copy:req.body.copy,
         pages:req.body.pages,
-        image:req.files
+        image:req.files.frontCover[0].filename
       })
       newBook.save()
 console.log("added book to db")

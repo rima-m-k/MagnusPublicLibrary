@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import imgs from "../images/background.jpg";
+import {  searchItem } from "../services/userServiceHelpers";
 function BackgroundBanner() {
-  const [isOpen, setIsOpen] = useState(false);
+const [searchTerm,setSearchTerm]= useState('')
+  
+  const handleChange= (e)=>{
+    e.preventDefault();
+    setSearchTerm(e.target.value);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  //
+  }
+  const handleSearch= (e)=>{
+    e.preventDefault();
+    searchItem(searchTerm)
+    .then(res =>{
+      console.log(res)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    
+  }
+
+  console.log(searchTerm)
   return (
     <>
       <div className="image w-full h-auto  relative bg-black bg-opacity-100">
@@ -21,42 +36,17 @@ function BackgroundBanner() {
               Welcome to Magnus Public Library
             </h2>
             <div className="pb-4 mb-8">
-              <form className="flex px-5" >
+              <form className="flex px-5" onSubmit={handleSearch} >
                 <input
                   type="text"
-                  className="w-full h-full rounded-l-lg py-3"
+                  name="searchTerm"
+                  id="searchTerm"
+                  value={searchTerm}
+                  onChange={handleChange}
+                  className="w-full h-full rounded-l-lg p-3"
                   placeholder="Search books,articles &more"
                 />
-                {/* dropdown */}
-                <div className="relative inline-block text-left">
-                  <button
-                    onClick={toggleDropdown}
-                    className="bg-gray-300 text-gray-700 font-semibold py-3 px-4  inline-flex items-center"
-                  >
-                    <span className="mr-1">Dropdown</span>
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 14l-5-5 1.41-1.41L10 11.17l3.59-3.58L15 9z" />
-                    </svg>
-                  </button>
-                  {isOpen && (
-                    <div className="absolute z-50 right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl">
-                      <span className="block px-4 py-2 text-black hover:bg-gray-100">
-                        Item 1
-                      </span>
-                      <span className="block px-4 py-2 text-black hover:bg-gray-100">
-                        Item 2
-                      </span>
-                      <span className="block px-4 py-2 text-black hover:bg-gray-100">
-                        Item 3
-                      </span>
-                    </div>
-                  )}
-                </div>
-                {/* dropdown end */}
+               
                 <button className="bg-custom-olive rounded-r-lg px-5 text-white ">
                   SEARCH
                 </button>

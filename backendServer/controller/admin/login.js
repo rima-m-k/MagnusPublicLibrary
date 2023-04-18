@@ -25,11 +25,12 @@ const login = async (req, res) => {
                 console.log(comparepassword)
                 if (comparepassword) {
                     console.log(designationID,"desID")
-                    console.log(admin[0].designationID.designation,"adminID")
+                    console.log(admin[0].designationID.designation,"des name")
                     if (designationID === admin[0].designationID.designationId) {
                          // res.cookie('token ', token); or local storage
                         const token= createToken(admin[0]._id)
-                        res.cookie('jwt ', token);
+                        // res.cookie('jwt ', token);
+                        console.log(token)
                         res.json({
                             token: token,
                             data:{email},
@@ -52,8 +53,8 @@ const login = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-
-        res.status(500).send({message: "error "});
-    }
+        console.log("Internal server error")
+        res.status(500).send({message: "Internal server error"});
+      }
 };
 module.exports = login;

@@ -26,9 +26,9 @@ const bookData = new mongoose.Schema({
     synopsis: {
         type: String,
     },
-    copy: {
-        type: String,
-    },
+    copy:Number,
+    onHold:Number,
+    onLoan:Number,
     image:{
         type:Array
     },

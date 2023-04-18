@@ -74,11 +74,32 @@ function checkConfirmPswd(data1,data2){
   return err
 }
  
+function validateImage(event){
+  const file = event.target.files[0];
+  const fileType = file.type.split('/')[0];
+  const fileSize = file.size / 1024 / 1024; // convert bytes to MB
+  let err=null;
+
+  if (fileType !== 'image') {
+    err='Please select an image file.';
+    event.target.value = null;
+  }
+
+  if (fileSize > 10) {
+    err='The image file size should not exceed 10MB.';
+    event.target.value = null;
+
+  }
+
+  return err;
+
+}
  
 module.exports ={
   checkEmail,
 isEmpty,
 checkPassword,
 checkName,
+validateImage,
 checkConfirmPswd
 }

@@ -3,6 +3,7 @@ const USERDATA = require("../../model/userSchema");
 const jwt = require("jsonwebtoken");
 
 async function userLogin(req, res) {
+  
   try {
     const createToken = (id) => {
       return jwt.sign({ id }, process.env.SECRET_KEY);
@@ -15,12 +16,12 @@ async function userLogin(req, res) {
       );
       if (checkPassword === true) {
         const token = createToken(user._id);
-        
-        let userID = user._id;
-        res.cookie("token", token);
+
+        req.session.userID=user._id
+        console.log(req.session)
         res.json({
           token: token,
-          data: { userID },
+          userName:user.name,
           message: "logged in successfully",
         });
       } else {
@@ -30,8 +31,10 @@ async function userLogin(req, res) {
       res.status(401).send({ message: "email not registered" });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("internal error");
+    console.log(error);
+      console.log("Internal server error")
+      res.status(500).send({message: "Internal server error"});
+    
   }
 }
 module.exports = { userLogin };

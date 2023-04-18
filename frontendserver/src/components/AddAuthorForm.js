@@ -17,7 +17,7 @@ function AddAuthorForm() {
     const [nameError, setNameError] = useState("");
     const [codeError, setCodeError] = useState("");
     const [dateError, setDateError] = useState("");
-    const [natError, setNatError] = useState("");
+    const [natError, setNatError] = useState(""); 
     const [bioError, setBioError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");

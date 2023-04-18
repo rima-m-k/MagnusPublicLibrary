@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import { staffLogin } from "../../services/adminServiceHelpers";
+import { checkEmail, checkPassword } from "../../validation/FormValidation";
 
 function StaffLogin() {
   let [formData, setFormData] = useState({
     email: "",
     password: "",
     designationID: "",
-  });
-
+  }); 
+ const [emailError,setEmailError] = useState('')
+ const [passwordError,setPasswordError] = useState('')
   let [error, setError] = useState("");
 
   const Navigate = useNavigate();
@@ -85,8 +87,11 @@ function StaffLogin() {
               value={formData.email}
               onChange={handleFormData}
               required
+              onKeyUp={ e => setEmailError(checkEmail(e.target.value))}
               className="border-gray-400 bg-gray-100 border-b-2 block w-full rounded py-2 px-3 mx-1"
             />
+                          {emailError && <span className="text-red-600"> {emailError}</span>}
+
           </div>
           <div className="mb-4">
             <label htmlFor="password" className="block font-medium mb-2">
@@ -101,8 +106,11 @@ function StaffLogin() {
               value={formData.password}
               onChange={handleFormData}
               required
+              onClick={e => setPasswordError(checkPassword(e.target.value))}
               className="border-gray-400 bg-gray-100 border-b-2 block w-full rounded py-2 px-3 mb-1"
             />
+                          {passwordError && <span className="text-red-600"> {passwordError}</span>}
+
           </div>
           <div className="mb-4">
             <label htmlFor="designationID" className="block font-medium mb-2">

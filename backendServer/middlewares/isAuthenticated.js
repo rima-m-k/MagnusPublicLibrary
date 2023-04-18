@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken')
 
-const requireAuth = (req, res, next) => {
+const requireAuth = (req, res, next) => { 
   try {
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-      const token = req.headers.authorization.split(",")[1].split(":")[1].split("}")[0].split("\"")[1];
 
+      console.log(req.headers.authorization)
+      const token = req.headers.authorization.split(":")[1].split("\"")[1].split("\"")[0];
       if (token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, decodedToken) => {
           if (err) {
@@ -12,7 +13,7 @@ const requireAuth = (req, res, next) => {
             console.log("err msg",err.message)
             return res.status(401).json({ error: 'Unauthorized' })
           } else {
-            // console.log(decodedToken)
+            console.log("decodedToken")
             next();
           }
         })

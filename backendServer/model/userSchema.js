@@ -12,6 +12,7 @@ const userData = new mongoose.Schema({
         type: String,
         
     },
+    libraryCardNumber:String,
     address:[{
         address1:{  
             type:String
@@ -22,12 +23,15 @@ const userData = new mongoose.Schema({
             type:String
         },state:{
             type:String
-        },country:{
-            type:String
         },pincode:{
             type:Number
         }
-    }]
+    }],
+    profilePhoto:String,
+    cardNumber:Number,
+    issuedOn:{
+        type:Date,
+    },
 })
 
 const UserData = new mongoose.model("userData", userData)

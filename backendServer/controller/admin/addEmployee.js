@@ -79,7 +79,15 @@ if(currentDesignation !== null){
 } 
 
 const getEmployee = async (req,res) => {
+  try {
     let designation = await DESIGNATION.find({})
     res.json(designation);
+    
+  } catch (error) {
+    console.log(error);
+    console.log("Internal server error")
+    res.status(500).send({message: "Internal server error"});
+  
+  }
 }
 module.exports = {addEmployee , getEmployee};

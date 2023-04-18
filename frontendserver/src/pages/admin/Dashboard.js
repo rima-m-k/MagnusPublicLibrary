@@ -4,7 +4,16 @@ import SideBar from "../../components/AdminSideBar";
 function Dashboard() {
   return (
     <>
-      <SideBar />
+    <div className="flex h-screen bg-gray-200">
+    <SideBar />
+      <div className="flex-grow p-6">
+      {/* content here */}
+      
+        
+      </div>
+    </div>
+
+ 
     </>
   );
 }

@@ -45,8 +45,15 @@ function AddEmployee() {
 
   return (
     <>
-      <SideBar />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+     
+   
+    <div className="flex h-screen bg-gray-200">
+    <SideBar />
+      <div className="flex-grow p-6">
+      {/* content here */}
+      
+      
+      <div className="flex flex-col items-center justify-center min-h-screen ">
         <div className="w-full max-w-md">
           <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
             <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
@@ -165,6 +172,12 @@ function AddEmployee() {
           </form>
         </div>
       </div >
+   
+      
+    </div>
+    </div>
+
+ 
     </>
 
   )

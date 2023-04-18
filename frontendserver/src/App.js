@@ -5,20 +5,18 @@ import UserRoutes from "./routes/UserRoutes";
 import AssistantRoutes from "./routes/AssistantRoutes";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <div className="App">
-   <Routes >  
-<Route path="/*" element={<UserRoutes />} />  
-<Route path="/admin/*" element={<AdminRoutes />} />  
-<Route path="/asst/*" element={<AssistantRoutes />} />  
-      
-        </Routes>
+      <Routes>
+        <Route path="/*" element={<UserRoutes />} />
+        <Route path="/asst/*" element={<AssistantRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+      </Routes>
 
-
-        <ToastContainer />
+      <ToastContainer />
     </div>
   );
 }

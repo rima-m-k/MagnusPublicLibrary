@@ -1,16 +1,25 @@
 import axios from "axios";
-const instance = axios.create({baseURL: 'http://localhost:8000/', timeout: 30000, headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`} });
-const client   = axios.create({baseURL: 'http://localhost:8000/' , timeout: 30000,  headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`, 'Content-Type': 'multipart/form-data'} });
+const instance = axios.create({baseURL: 'http://localhost:8000/', timeout: 30000, headers: {   Authorization: `Bearer ${localStorage.getItem('currentUser')}`} ,withCredentials: true,});
+const client   = axios.create({baseURL: 'http://localhost:8000/' , timeout: 30000,  headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`, 'Content-Type': 'multipart/form-data'} ,withCredentials: true,});
 
 const  userSignup = (userData) =>   instance.post('/userSignup',userData);
-
+const OTPverification = (userData) => instance.put('/userSignup',userData) 
 const userLogin = (userInfo) => instance.post('/userLogin',userInfo);
-const fetchBook = () => instance.get('/');
+const fetchBook = () => instance.get('/viewBooks');
+const fetchSingleBook =(id) => instance.get(`/books/${id}`)
 const placeHold = (bookingData) => instance.post('/placeHold',bookingData)
+const searchItem = (searchTerm) => instance.post('/search',{term:searchTerm})
+const getUserProfile = () => instance.get('/userProfile') 
+const LibraryCard = (formData) => client.post('/LibraryCardApplication',formData)
 
 export {
     userSignup,
     userLogin,
     fetchBook,
-    placeHold
+    placeHold,
+    searchItem,
+    OTPverification,
+    getUserProfile,
+    fetchSingleBook,
+    LibraryCard
 };

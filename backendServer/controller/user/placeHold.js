@@ -3,7 +3,7 @@ const USER = require("../../model/userSchema");
 const mongoose = require("mongoose");
 const placeHold = async (req, res) => { 
   try {
-    
+console.log(req.session.userID)
     let ONHold = await ONHOLD.findOne({ user: req.body.userID });
     if (!ONHold) {
       //first time holding a book
@@ -14,7 +14,7 @@ const placeHold = async (req, res) => {
             date: req.body.date,
           },
         ],
-        user: req.body.userID,
+        user:req.session.userID,
       });
      await newOnHold.save();
       console.log("saved to db")
@@ -50,8 +50,10 @@ const placeHold = async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("Internal Server Error");
+    console.log(err.message);
+    console.log("Internal server error")
+    res.status(500).send({message: "Internal server error"});
+  
   } 
 };
 module.exports = {

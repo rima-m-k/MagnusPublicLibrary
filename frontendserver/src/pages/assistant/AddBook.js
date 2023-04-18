@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavigationBar from "../../components/AsstNavigationBar";
 import {
   addBook,
   fetchBookAndGenres,
@@ -11,6 +10,8 @@ import {
   checkNationality,
   checkTextarea,
 } from "../../validation/addAuthorValidations";
+import { validateImage } from "../../validation/FormValidation";
+import AsstNavigationBar from "../../components/AsstNavigationBar";
 
 function AddBook() {
   //////////////////////////////////////////////////declaring states/////////////////////////////////////////////////////////////
@@ -56,6 +57,7 @@ function AddBook() {
   const [pageError, setPageError] = useState("");
   const [publisherError, setPublisherError] = useState("");
   const [synopsisError, setSynopsisError] = useState("");
+  const [imageError,setImageError] = useState("")
 
   let [error, setError] = useState("");
 
@@ -109,7 +111,7 @@ function AddBook() {
 
   return (
     <>
-      <NavigationBar />
+      <AsstNavigationBar />
 
       <div className="container m-auto mb-4 ">
         <h1 className="text-center text-3xl font-semibold  py-4 ">Add Book</h1>
@@ -520,10 +522,13 @@ function AddBook() {
                       id="frontCover"
                       name="frontCover"
                       required
+                      accept="image/*" 
+                      onchange={(e) => setImageError(validateImage(e))}
                       value={bookData.frontCover}
                       onChange={handleChange}
                       className="px-4"
                     />
+                    {imageError && <span className="text-red-600">{imageError}</span>}
                   </div>
                 </div>
               </div>

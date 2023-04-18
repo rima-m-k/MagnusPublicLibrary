@@ -37,6 +37,8 @@ setError('')
       token: res.data.token,
     };
     localStorage.setItem("currentUser", JSON.stringify(data));
+  localStorage.setItem("userName", JSON.stringify(res.data.userName));
+
     Navigate("/")
   })
   .catch((err) => {

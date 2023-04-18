@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavMenu from "../../components/UserNavigation";
-import { userSignup } from "../../services/userServiceHelpers";
+import { OTPverification, userSignup } from "../../services/userServiceHelpers";
 import {checkEmail , checkPassword , checkName ,checkConfirmPswd} from "../../validation/FormValidation"
 import spinner from "../../spinner/UserSpinner.gif";
 
@@ -16,7 +16,9 @@ const Signup = () => {
     email:"",
     password:"",
     cpassword :"",
+    otp:""
   })
+  const [showOTP,setShowOTP] =useState(false)
   const [nameError,setNameError] = useState('')
   const [emailError,setEmailError] = useState('')
   const [passwordError,setPasswordError] = useState('')
@@ -34,53 +36,80 @@ const Signup = () => {
        setError('')
 
   }
+
+   
+  
   function handleSubmit(e) {
     e.preventDefault();
 if(nameError ||  emailError || passwordError || cpasswordError ){
   setError('Form contains invalid details . Try again later')
 }else{
+
   setIsLoading(true);
   userSignup(userData)
   .then(res => {
     console.log(res)
-    const data = {
-      ...res.data.data,
-      token: res.data.token,
-    };
-    localStorage.setItem("currentUser", JSON.stringify(data));
-    Navigate("/")
-    })
-    .catch((err) =>{
-      console.log(err)
-      setError(err.response.message)
-    })
-    .finally(()=>{
-      setIsLoading(false);
-      setUserData({
-        name:" ",
-        email:"",
-        password:"",
-        cpassword :"",
-      })
-    })
-    
+if(res.status===200){
+setShowOTP(true)
+}
+})
+.catch((err) =>{
+  //err.response.status===500
+  console.log(err)
+  if(err.response.status===401) setError(err.response.data.message)
+   else if( err.response.status === 500)  setError(err.response.data.message)
+   else setError(err.message)
+})
+.finally(()=>{
+  setIsLoading(false);
+  
+})  
+
+} 
     
 }
+        // const data = {
+        //   ...res.data.data,
+        //   token: res.data.token,
+        // };
+        // localStorage.setItem("currentUser", JSON.stringify(data));
+      
+      
+       
 
+
+
+   function verifyOTP (e){
+e.preventDefault();
+console.log(userData)
+OTPverification(userData)
+.then((res) =>{
+  console.log(res)
+  localStorage.setItem("currentUser", JSON.stringify(res.data.token));
+  localStorage.setItem("userName", JSON.stringify(res.data.userName));
   
-  }
+  Navigate('/')
+})
+.catch((err) =>{
+  console.log(err)
+})
+
+   }
 
   return ( 
     <> 
       <NavMenu />
-      <div className="    min-h-screen">
+      <div className="min-h-screen">
         <h1 className="text-center  font-bold mb-6 text-slate-800  border-x-gray-500 text-3xl   m-5 pt-5 ">
           SIGNUP
         </h1>
         <div className="flex flex-col items-center   min-h-screen ">
         <div className="w-full max-w-md">
-          <form className="  shadow-neutral-500 shadow-2xl rounded px-8  pb-8 my-4 " onSubmit={handleSubmit}>
-         
+       { !showOTP ?
+
+        <form className="shadow-neutral-500 shadow-2xl rounded px-8 pb-8 my-4" onSubmit={handleSubmit}>
+        
+        
               <div className="my-4">
                 <label
                   htmlFor="name"
@@ -182,7 +211,42 @@ if(nameError ||  emailError || passwordError || cpasswordError ){
               >
                 &nbsp; Register &nbsp;
               </button>
+             
+               
+              
+            
             </form>
+:
+<form className="shadow-neutral-500 shadow-2xl rounded px-8 pb-8 my-4" onSubmit={verifyOTP}>
+
+<div className="my-4">
+                <label
+                  htmlFor="otp"
+                  className="block text-gray-700 font-bold mb-4 pt-4"
+                >
+                 OTP
+                </label>
+                <input
+                  type="number"
+                  id="otp"
+                  name="otp"
+                  value={userData.otp}
+                  onChange={handleChange}
+                  // onKeyUp={e=> setNameError(checkName(e.target.value))}
+                  className="w-full px-3 py-2 text-gray-900  rounded-md border-2"
+                />
+                {/* {nameError && <span className="text-red-600"> {nameError}</span>} */}
+              </div>
+              <button
+                type="submit"
+                className="bg-custom-green text-white rounded-md px-4 py-2 m-3 hover:bg-custom-olive"
+              >
+                &nbsp; Verify &nbsp;
+              </button>
+</form>
+}
+
+           
             </div>
             </div>
        

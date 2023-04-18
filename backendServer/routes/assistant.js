@@ -7,9 +7,9 @@ const { addGenre } = require("../controller/assistant/Genre");
 const { requireAuth } = require("../middlewares/isAuthenticated");
 
 
-router.route('/addBook').get(requireAuth,fetchBookAndGenres).post(requireAuth,upload.fields([{ name: 'frontCover', maxCount: 1}]),addBook )
-router.route('/addAuthor').post( requireAuth,addAuthor)
-router.route('/addGenre').post(requireAuth,addGenre);
+router.route('/addBook').get(fetchBookAndGenres).post(upload.fields([{ name: 'frontCover', maxCount: 1}]),addBook )
+router.route('/addAuthor').post(addAuthor)
+router.route('/addGenre').post(addGenre);
 
 
 
