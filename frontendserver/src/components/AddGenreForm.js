@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { checkName,checkCode,checkTextarea } from '../validation/addAuthorValidations';
+import { checkName,checkCode,checkTextarea } from '../validation/FormValidation';
 import { addGenre } from '../services/assistantServiceHelpers';
 import spinner from "../spinner/Spinner.gif";
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function AddGenreForm() {
+  const Navigate = useNavigate()
 const [genreData,setGenreData]= useState({
     genreCode:'',
     genreName : '',
@@ -51,6 +53,19 @@ setError("");
 .catch(err =>{
 console.log(err);
 setError(err.response.data.message)
+if(err.response.data.error==="Blocked By Admin"){
+  toast.error("Blocked By Admin", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  Navigate('/admin/staffPortal')
+}
 })
 .finally(()=>{
 setIsloading(false)

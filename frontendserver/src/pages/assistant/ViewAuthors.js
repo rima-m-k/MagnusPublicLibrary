@@ -1,11 +1,12 @@
 
 import React, { useEffect, useState } from 'react'
-import AsstNavigationBar from '../../components/AsstNavigationBar';
-import { getAuthorData } from '../../services/adminServiceHelpers';
+import { getAuthorData } from '../../services/assistantServiceHelpers';
 import DataTable from 'react-data-table-component';
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 function ViewAuthors() { 
-  
+  const Navigate = useNavigate()
     
   const [authorData, setAuthorData] = useState([]);
   const [error, setError] = useState("");
@@ -23,6 +24,19 @@ function ViewAuthors() {
     .catch((err) => {
       console.log(err);
       setError(err.response);
+      if(err.response.data.error==="Blocked By Admin"){
+        toast.error("Blocked By Admin", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        Navigate('/admin/staffPortal')
+      }
     });
 }, []);
 console.log(error)
@@ -90,7 +104,6 @@ const columns = [
 ];
   return (
     <>
-    <AsstNavigationBar />
 
           {/* <h2 className="text-lg font-medium leading-6 text-gray-900">Author List</h2> */}
           <div className="mt-4 overflow-x-auto">

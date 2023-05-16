@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import SideBar from "../../components/AdminSideBar";
 import { addEmployee, fetchStaffID } from "../../services/adminServiceHelpers";
+import Spinner from "../../components/Spinner";
 
 function AddEmployee() {
+  const [isLoasing,setIsLoading] = useState(false)
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -24,6 +26,7 @@ function AddEmployee() {
   }
   function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true)
     addEmployee(formData)
     .then( res =>{
        console.log(res)
@@ -39,19 +42,16 @@ function AddEmployee() {
       console.log(error.response.data.message)
       setError(error.response.data.message)
     })
+    .finally(() => setIsLoading(false))
+
   }
   console.log(formData)
   let keys = Object.keys(staffID);
-
+//problem with layout
   return (
     <>
      
    
-    <div className="flex h-screen bg-gray-200">
-    <SideBar />
-      <div className="flex-grow p-6">
-      {/* content here */}
-      
       
       <div className="flex flex-col items-center justify-center min-h-screen ">
         <div className="w-full max-w-md">
@@ -89,6 +89,7 @@ function AddEmployee() {
                 required
               />
             </div>
+            {isLoasing ?<Spinner isUser = {false}/> :null }
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -174,8 +175,7 @@ function AddEmployee() {
       </div >
    
       
-    </div>
-    </div>
+    
 
  
     </>

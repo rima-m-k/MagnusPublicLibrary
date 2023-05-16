@@ -3,7 +3,7 @@ const USERDATA = require("../../model/userSchema");
 const jwt = require("jsonwebtoken");
 
 async function userLogin(req, res) {
-  
+   
   try {
     const createToken = (id) => {
       return jwt.sign({ id }, process.env.SECRET_KEY);

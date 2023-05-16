@@ -9,8 +9,13 @@ const fetchBook = () => instance.get('/viewBooks');
 const fetchSingleBook =(id) => instance.get(`/books/${id}`)
 const placeHold = (bookingData) => instance.post('/placeHold',bookingData)
 const searchItem = (searchTerm) => instance.post('/search',{term:searchTerm})
-const getUserProfile = () => instance.get('/userProfile') 
+const getUserProfile = () => instance.get('/profile') 
 const LibraryCard = (formData) => client.post('/LibraryCardApplication',formData)
+const fetchEvents = () => instance.get('/allEvents');
+const fetchEvent = (id) => instance.get(`/viewEvent/${id}`)
+const fetchBlog = () => instance.get('/community');
+const addReview = (review) => instance.patch('/books/:id',review)
+
 
 export {
     userSignup,
@@ -21,5 +26,9 @@ export {
     OTPverification,
     getUserProfile,
     fetchSingleBook,
-    LibraryCard
+    LibraryCard,
+    fetchEvents,
+    fetchEvent,
+    fetchBlog,
+    addReview
 };

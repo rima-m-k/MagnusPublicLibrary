@@ -19,9 +19,7 @@ const author = new mongoose.Schema({
         type : String,
         default: ' '
     },
-    Bibliography : {
-        type : Array,
-    }
+   
 
         
     

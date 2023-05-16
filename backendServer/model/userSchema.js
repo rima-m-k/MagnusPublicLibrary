@@ -28,7 +28,8 @@ const userData = new mongoose.Schema({
         }
     }],
     profilePhoto:String,
-    cardNumber:Number,
+    cardNumber:String,
+    index:Number,
     issuedOn:{
         type:Date,
     },

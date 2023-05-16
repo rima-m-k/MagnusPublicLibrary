@@ -6,6 +6,7 @@ import AddGenre from "../pages/assistant/AddGenre";
 import ViewAuthors from "../pages/assistant/ViewAuthors";
 import ViewGenre from "../pages/assistant/ViewGenre";
 import ViewBooks from "../pages/user/ViewBook";
+import ViewBlog from "../pages/assistant/ViewBlog";
 function AsstNavigationBar() {
   const [isOpen, setIsOpen] = useState({
     book: false,
@@ -82,6 +83,11 @@ function AsstNavigationBar() {
                   View Genre
                 </span>
               </Link>
+              <Link to="/asst/viewBlog" element={<ViewBlog />}>
+                <span className="block px-4 py-2 text-black hover:bg-gray-100">
+                  View Blog
+                </span>
+              </Link>
             </div>
           )}
         </div>
@@ -110,15 +116,17 @@ function AsstNavigationBar() {
                 view all users
               </span>
               {/* </Link> */}
-              <span className="block px-4 py-2 text-black hover:bg-gray-100">
+              {/* <span className="block px-4 py-2 text-black hover:bg-gray-100">
                 Item 2
               </span>
               <span className="block px-4 py-2 text-black hover:bg-gray-100">
                 Item 3
-              </span>
+              </span> */}
             </div>
           )}
         </div>
+
+        
         {/* dropdown end */}
       </div>
     </nav>

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import NavMenu from "../../components/UserNavigation";
 import { userLogin } from "../../services/userServiceHelpers";
-import { checkEmail,isEmpty } from '../../validation/FormValidation';
+import { checkEmail, isEmpty } from '../../validation/FormValidation';
 import spinner from "../../spinner/UserSpinner.gif";
 
 function Login() {
@@ -18,55 +17,51 @@ function Login() {
   const [error, setError] = useState("");
 
   function handleChange(e) {
-    const name = e.target.name;
+    const name = e.target.name; 
     const value = e.target.value;
     setUserInfo((values) => ({ ...values, [name]: value }));
-setError('')
+    setError('')
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(emailError || passwordError){
+    if (emailError || passwordError) {
       setError("Form contains invalid details . Try again later")
-    }else{
-  setIsLoading(true);
-  userLogin(userInfo)
-  .then((res) => {
-    console.log(res)
-    const data = {
-      ...res.data.data,
-      token: res.data.token,
-    };
-    localStorage.setItem("currentUser", JSON.stringify(data));
-  localStorage.setItem("userName", JSON.stringify(res.data.userName));
+    } else {
+      setIsLoading(true);
+      userLogin(userInfo)
+        .then((res) => {
+          console.log(res)
+         
+          localStorage.setItem("currentUser", JSON.stringify(res.data.token));
+          localStorage.setItem("userName", JSON.stringify(res.data.userName));
 
-    Navigate("/")
-  })
-  .catch((err) => {
-    
+          Navigate("/") 
+        })
+        .catch((err) => {
 
-    console.log(err);
-    setError(err.response.data.message);
-  })
-  .finally(() => {
-    setIsLoading(false);
-    setUserInfo({
-      email:'',
-      password:''
-    })
-  });
-}
+
+          console.log(err);
+          setError(err.response.data.message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setUserInfo({
+            email: '',
+            password: ''
+          })
+        });
+    }
 
 
 
-      
-    
+
+
   };
 
   return (
     <>
-      <NavMenu />
       <div className="flex flex-col items-center  min-h-screen bg-slate-50">
-          <h2 className="text-3xl font-bold mb-6 text-slate-800  border-x-gray-500 my-4 py-4 ">LOGIN</h2>
+        <h2 className="text-3xl font-bold mb-6 text-slate-800  border-x-gray-500 my-4 py-4 ">LOGIN</h2>
         <div className="w-full max-w-md">
           <form
             onSubmit={handleSubmit}
@@ -84,7 +79,7 @@ setError('')
                 name="email"
                 value={userInfo.email}
                 onChange={handleChange}
-                onKeyUp={ e => setEmailError(checkEmail(e.target.value))}
+                onKeyUp={e => setEmailError(checkEmail(e.target.value))}
                 className=" bg-zinc-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
@@ -135,8 +130,8 @@ setError('')
               >
                 Login
               </button>
-              </div>
-              <div>
+            </div>
+            <div>
               <Link
                 to="/signup"
                 className="inline-block align-baseline font-bold text-sm text-custom-green hover:text-custom-olive"

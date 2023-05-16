@@ -3,17 +3,14 @@ import {
   addBook,
   fetchBookAndGenres,
 } from "../../services/assistantServiceHelpers";
-import {
-  checkCode,
-  checkDate,
-  checkName,
-  checkNationality,
-  checkTextarea,
-} from "../../validation/addAuthorValidations";
-import { validateImage } from "../../validation/FormValidation";
-import AsstNavigationBar from "../../components/AsstNavigationBar";
+
+import { checkName, validateImage, checkTextarea, checkNationality, checkDate, checkCode } from "../../validation/FormValidation";
+import { toast } from "react-toastify";
+import Spinner from "../../components/Spinner";
+import { useNavigate } from "react-router-dom";
 
 function AddBook() {
+  const Navigate = useNavigate()
   //////////////////////////////////////////////////declaring states/////////////////////////////////////////////////////////////
 
   const [bookData, setBookData] = useState({
@@ -42,32 +39,49 @@ function AddBook() {
 
   const [frontCover, setFrontCover] = useState({});
 
-  const [nameError, setNameError] = useState("");
-  const [codeError, setCodeError] = useState("");
-  const [dateError, setDateError] = useState("");
-  const [natError, setNatError] = useState("");
-  const [bioError, setBioError] = useState("");
+  const [nameError, setNameError] = useState(null);
+  const [codeError, setCodeError] = useState(null);
+  const [dateError, setDateError] = useState(null);
+  const [natError, setNatError] = useState(null);
+  const [bioError, setBioError] = useState(null);
 
-  const [genreNameError, setgenreNameError] = useState("");
-  const [genreCodeError, setgenreCodeError] = useState("");
-  const [genreDescError, setgenreDescError] = useState("");
+  const [genreNameError, setgenreNameError] = useState(null);
+  const [genreCodeError, setgenreCodeError] = useState(null);
+  const [genreDescError, setgenreDescError] = useState(null);
 
-  const [titleError, setTitleError] = useState("");
-  const [copyError, setCopyError] = useState("");
-  const [pageError, setPageError] = useState("");
-  const [publisherError, setPublisherError] = useState("");
-  const [synopsisError, setSynopsisError] = useState("");
-  const [imageError,setImageError] = useState("")
+  const [titleError, setTitleError] = useState(null);
+  const [copyError, setCopyError] = useState(null);
+  const [pageError, setPageError] = useState(null);
+  const [publisherError, setPublisherError] = useState(null);
+  const [synopsisError, setSynopsisError] = useState(null);
+  const [imageError, setImageError] = useState(null);
 
   let [error, setError] = useState("");
-
+  const [isLoasing, setIsLoading] = useState(false)
+  //////////////////////////////////////////////////fetch everything/////////////////////////////////////////////////////////////
   useEffect(() => {
-    fetchBookAndGenres().then((res) => {
-      setGenreData(res.data.genreData);
-      setAuthorData(res.data.authorData);
-    });
+    fetchBookAndGenres()
+      .then((res) => {
+        setGenreData(res.data.genreData);
+        setAuthorData(res.data.authorData);
+      })
+      .catch(err => {
+        if (err?.response?.data?.error === "Blocked By Admin") {
+          toast.error("Blocked By Admin", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          Navigate('/admin/staffPortal')
+        }
+      })
   }, []);
-
+  //////////////////////////////////////////////////handle change/////////////////////////////////////////////////////////////
   function handleChange(e) {
     const name = e.target.name;
     const value = e.target.value;
@@ -76,9 +90,11 @@ function AddBook() {
       setFrontCover(e.target.files[0]);
     }
   }
+  //////////////////////////////////////////////////handle submit/////////////////////////////////////////////////////////////
 
   function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true)
     const formdata = new FormData();
     formdata.append("frontCover", frontCover);
     formdata.append("title", bookData.title);
@@ -98,12 +114,85 @@ function AddBook() {
     formdata.append("synopsis", bookData.synopsis);
     formdata.append("copy", bookData.copy);
     formdata.append("pages", bookData.pages);
-    addBook(formdata)
-      .then((res) => console.log(res))
-      .catch((err) => {
-        console.log(err);
-        setError(err.response);
-      });
+    if (!imageError && !synopsisError && !publisherError && !pageError && !copyError && !titleError && !genreDescError && !genreCodeError && !genreNameError && !bioError && !natError && !dateError && !codeError && !nameError) {
+      addBook(formdata)
+        .then(res => {
+          console.log(res);
+          toast.success("Added to Database", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setBookData({
+            title: "",
+            author: "",
+            newAuthorName: "",
+            newAuthorCode: "",
+            newAuthorDOB: "",
+            newAuthorDOD: "",
+            newAuthorNationality: "",
+            newAuthorBiography: "",
+            publisher: "",
+            genre: "",
+            newGenreName: "",
+            newGenreCode: "",
+            newGenreDesc: "",
+            publicationDate: "",
+            frontCover: "",
+            synopsis: "",
+            copy: "",
+            pages: "",
+          });
+
+        })
+        .catch((err) => {
+          console.log(err);
+
+          if (err?.response?.status === 422) {
+            toast.error("Invalid file type", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            })
+          }
+          if (err?.response?.status === 409) {
+            setError(err.response.data.message);
+            console.log(error)
+          }
+          if (err?.response?.status === 500) {
+            toast.error("Unexpected Error Occured", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            })
+          }
+          if (err.code === "ECONNABORTED") {
+            setError("Connection Timed Out");
+            setError(err.response.message);
+          }
+        })
+        .finally(() => setIsLoading(false))
+
+    } else {
+      setIsLoading(false)
+      setError("form contains invalid data")
+    }
+
   }
 
   let key1 = Object.keys(genreData);
@@ -111,7 +200,6 @@ function AddBook() {
 
   return (
     <>
-      <AsstNavigationBar />
 
       <div className="container m-auto mb-4 ">
         <h1 className="text-center text-3xl font-semibold  py-4 ">Add Book</h1>
@@ -355,7 +443,6 @@ function AddBook() {
                       type="text"
                       id="newGenreName"
                       name="newGenreName"
-
                       value={bookData.newGenreName}
                       onChange={handleChange}
                       onKeyUp={(event) =>
@@ -463,6 +550,7 @@ function AddBook() {
                   <span className="text-red-600"> {pageError}</span>
                 ) : null}
               </div>
+              {isLoasing ? <Spinner /> : null}
               <div className="mb-4">
                 <label
                   htmlFor="publisher"
@@ -522,13 +610,15 @@ function AddBook() {
                       id="frontCover"
                       name="frontCover"
                       required
-                      accept="image/*" 
-                      onchange={(e) => setImageError(validateImage(e))}
+                      accept="image/*"
+                      onClick={(e) => setImageError(validateImage(e))}
                       value={bookData.frontCover}
                       onChange={handleChange}
                       className="px-4"
                     />
-                    {imageError && <span className="text-red-600">{imageError}</span>}
+                    {imageError && (
+                      <span className="text-red-600">{imageError}</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -548,21 +638,23 @@ function AddBook() {
                   required
                   value={bookData.synopsis}
                   onChange={handleChange}
-                  onKeyUp={event => setSynopsisError(checkTextarea(event.target.value))}
-                  ></textarea>
-                  {synopsisError ? (
-                    <span className="text-red-600"> {synopsisError}</span>
-                  ) : null}
-                </div>
-              {error ? (
+                  onKeyUp={(event) =>
+                    setSynopsisError(checkTextarea(event.target.value))
+                  }
+                ></textarea>
+                {synopsisError ? (
+                  <span className="text-red-600"> {synopsisError}</span>
+                ) : null}
+              </div>
+              {error &&
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
                   {error}
                 </div>
-              ) : null}
+              }
               <div>
                 <button
                   type="submit"
-                  className="bg-custom-blue text-white rounded-md px-4 py-2 m-3 "
+                  className="bg-custom-blue hover:bg-slate-900 text-white rounded-md px-4 py-2 m-3 "
                 >
                   {" "}
                   &nbsp; Add Book &nbsp;{" "}

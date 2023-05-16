@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Signup from "../pages/user/Signup";
@@ -6,12 +6,13 @@ import Login from "../pages/user/Login";
 import LandingPage from "../pages/user/LandingPage";
 import AllBooks from "../pages/user/AllBooks";
 import UserProfile from "../pages/user/UserProfile";
+import AllEvents from "../pages/user/AllEvents";
+import Community from "../pages/user/Community";
 
-function NavMenu() {
-  const [toggleUser,setToggleUser] = useState(false)
-  const token = localStorage.getItem('currentUser');
+function NavMenu({ token, userName }) {
+  const [toggleUser, setToggleUser] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-let userName = localStorage.getItem("userName")
+
   function toggleMenu() {
     setShowMenu(!showMenu);
   }
@@ -51,81 +52,89 @@ let userName = localStorage.getItem("userName")
           }`}
           id="menu"
         >
-          <nav >
-            { !token ?
-            <>
-            
-            <Link to="/login" className="text-white p-5 m-2 " element={<Login />}>
-              {" "}
-              login{" "}
-            </Link>
-            <Link to="/signup" className="text-white p-5 m-2 " element={<Signup />}>
-              {" "}
-              Signup{" "}
-            </Link>
-            </>:
-            <>
-            <span  
-            onClick={() => setToggleUser(prev => !prev )}
-            className="text-white p-2 m-3 absolute right-0 top-0  border rounded-xl " >
-            {JSON.parse(userName)}
-
-          </span>
-          <div className=" px-10 ">
-            {toggleUser && (
-              <div className="absolute z-50 right-0 mt-2 py-2  bg-green-50 rounded-xl shadow-xl">
-                <Link to="/profile"  element={<UserProfile/>}>
-
-                  <span className="block px-6 py-2  hover:bg-slate-300 ">
-                    Profile
-                  </span>
+          <nav>
+            {!token ? (
+              <>
+                <Link
+                  to="/login"
+                  className="text-white p-5 m-2 "
+                  element={<Login />}
+                >
+                  {" "}
+                  login{" "}
                 </Link>
-                {/* <Link to="/admin/viewGenre"  element={<ShowGenre  />}> */}
-                  <span className="block px-6 py-2  hover:bg-slate-300 ">
-                    Reading History
-                  </span>
-                {/* </Link> */}
-                {/* <Link to="/admin/viewAuthors"  element={<ShowAuthors/>}> */}
-                  <span className="block px-6 py-2  hover:bg-slate-300 ">
-                    Settings
-                  </span>
-                {/* </Link> */}
-                {/* <Link to="/admin/viewBooks"  element={<ShowBooks/>}> */}
+                <Link
+                  to="/signup"
+                  className="text-white p-5 m-2 "
+                  element={<Signup />}
+                >
+                  {" "}
+                  Signup{" "}
+                </Link>
+              </>
+            ) : (
+              <>
+                <span
+                  onClick={() => setToggleUser((prev) => !prev)}
+                  className="text-white p-2 m-3 absolute right-0 top-0  border rounded-xl "
+                >
+                  {JSON.parse(userName)}
+                </span>
+                <div className=" px-10 ">
+                  {toggleUser && (
+                    <div className="absolute z-50 right-0 mt-2 py-2  bg-green-50 rounded-xl shadow-xl">
+                      <Link to="/profile" element={<UserProfile />}>
+                        <span className="block px-6 py-2  hover:bg-slate-300 ">
+                          Profile
+                        </span>
+                      </Link>
+                      {/* <Link to="/admin/viewGenre"  element={<ShowGenre  />}> */}
+                      <span className="block px-6 py-2  hover:bg-slate-300 ">
+                        Reading History
+                      </span>
+                      {/* </Link> */}
+                      {/* <Link to="/admin/viewAuthors"  element={<ShowAuthors/>}> */}
+                      <span className="block px-6 py-2  hover:bg-slate-300 ">
+                        Settings
+                      </span>
+                      {/* </Link> */}
+                      {/* <Link to="/admin/viewBooks"  element={<ShowBooks/>}> */}
 
-                <span className="block px-6 py-2  hover:bg-slate-300 ">
-                    Logout 
-                  </span>
-                {/* </Link> */}
-              </div>
+                      <span className="block px-6 py-2  hover:bg-slate-300 ">
+                        Logout
+                      </span>
+                      {/* </Link> */}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
-          </div>
-
-           
-            </>
-}
-<hr className="border-t border-white-300  m-3 w-full" />
+            <hr className="border-t border-white-300  m-3 w-full" />
 
             <ul className="flex  items-center justify-around  font-medium text-xl text  text-white">
               <li>
                 <Link
+                  to="/bookList"
+                  element={<AllBooks />}
                   className="block m-3 px-4 md:inline-block md:mt-0 hover:text-white"
-                  to="/bookList" element={<AllBooks />}
                 >
-               Borrow
+                  Borrow
                 </Link>
               </li>
               <li>
                 <Link
+                  to="/allEvents"
+                  element={<AllEvents />}
                   className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
-                  to="#"
                 >
                   Events
                 </Link>
               </li>
               <li>
                 <Link
+                  to="/community"
+                  element={<Community />}
                   className="block  m-2 px-4 md:inline-block md:mt-0 hover:text-white"
-                  to="#"
                 >
                   Community
                 </Link>

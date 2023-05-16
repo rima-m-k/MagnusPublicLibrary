@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import SideBar from "../../components/AdminSideBar";
+import Spinner from "../../components/Spinner";
 
 function Dashboard() {
+  const [isLoasing,setIsLoading] = useState(false)
+
   return (
     <>
-    <div className="flex h-screen bg-gray-200">
-    <SideBar />
-      <div className="flex-grow p-6">
-      {/* content here */}
-      
-        
-      </div>
-    </div>
+   
+    Dashboard
 
  
     </>

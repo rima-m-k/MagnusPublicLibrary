@@ -9,9 +9,7 @@ const genre = new mongoose.Schema({
     description : {
         type : String,
     },
-    examples : {
-        type : Array,
-    },
+   
 })
 const Genre = new mongoose.model("genre", genre)
 module.exports = Genre

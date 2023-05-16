@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { searchData } from '../../services/adminServiceHelpers';
 import SideBar from '../../components/AdminSideBar';
+import Spinner from "../../components/Spinner";
 
 function ReturnRenew() {
+  const [isLoasing,setIsLoading] = useState(false)
+
   const [formData,setFormData] = useState({
     bookID:'',
     cardNumber:'',
@@ -19,15 +22,13 @@ searchData(formData)
   setFormData((values) => ({ ...values, [name]: value }));
   }
   function handleSubmit(e){
+    setIsLoading(true)
     e.preventDefault();
+
   }
    return (
     <>
-    <div className="flex h-screen bg-gray-200">
-    <SideBar />
-      <div className="flex-grow p-6">
-      {/* content here */}
-      
+   
       <div className="flex flex-col justify-center items-center   mx-auto mt-5 ">
         <form
           onSubmit={handleSubmit}
@@ -66,6 +67,7 @@ searchData(formData)
           onClick={search}
           className='p-2 mx-3 bg-blue-800 rounded-lg hover:bg-blue-700 text-white mb-4'
           >Search</button>
+          {isLoasing ?<Spinner isUser = {false} /> :null }
            <label htmlFor="bookID" className="block font-medium mb-2">
               Type
             </label>
@@ -84,7 +86,6 @@ Renew
 </div>
 
           </div>
-         
           <button
             type="submit"
             className="bg-custom-blue  text-white py-2 px-4 "
@@ -98,16 +99,14 @@ Renew
 
 
         
-      </div>
-    </div>
-
+     
  
     </>
   );
 }
   {/* 
       return {
-date 
+date  
 fine = expected return - date of return /7  *10
       }
       renew {

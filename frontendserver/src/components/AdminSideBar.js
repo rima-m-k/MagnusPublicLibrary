@@ -2,21 +2,28 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import AddEmployee from "../pages/admin/AddEmployee";
 import Dashboard from "../pages/admin/Dashboard";
-import ShowGenre from '../pages/admin/ShowGenre'
-import ShowBooks from '../pages/admin/ShowBooks'
-import ShowAuthors from '../pages/admin/ShowAuthors'
+import ShowGenre from "../pages/admin/ViewGenre";
+import ShowBooks from "../pages/admin/ViewBooks";
+import ShowAuthors from "../pages/admin/ViewAuthors";
 import CheckOut from "../pages/admin/CheckOut";
 import ReturnRenew from "../pages/admin/ReturnRenew";
 import ViewEmployees from "../pages/admin/ViewEmployees";
 import ViewUsers from "../pages/admin/ViewUsers";
+import AddEvent from "../pages/admin/AddEvent";
+import AddBlog from "../pages/admin/AddBlog";
+import Profile from "../pages/admin/Profile";
+import ViewEvent from '../pages/admin/ViewEvent';
+
 function SideBar() {
   const [toggleDown, setToggleDown] = useState({
     employee: false,
     catalogue: false,
     users: false,
     ga: false,
-    circulation:false,
-    users:false,
+    circulation: false,
+    event: false,
+    profile: false,
+    blog: false
   });
   const handleToggle = (key) => {
     setToggleDown((prevState) => ({
@@ -27,7 +34,6 @@ function SideBar() {
 
   return (
     <div className="w-64  bg-gray-800 text-white flex flex-col items-center ">
-      
       <div className="h-16 w-full flex items-center justify-center text-2xl font-bold">
         <h1 className="text-2xl font-semibold ">Magnus Public Library</h1>
       </div>
@@ -59,7 +65,6 @@ function SideBar() {
                     view Employees
                   </span>
                 </Link>
-              
               </>
             )}
           </div>
@@ -79,8 +84,6 @@ function SideBar() {
                     View Members
                   </span>
                 </Link>
-               
-              
               </>
             )}
           </div>
@@ -95,17 +98,17 @@ function SideBar() {
           <div className=" px-10 ">
             {toggleDown.catalogue && (
               <>
-                <Link to="/admin/viewBooks"  element={<ShowBooks/>}>
+                <Link to="/admin/viewBooks" element={<ShowBooks />}>
                   <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
                     Books
                   </span>
                 </Link>
-                <Link to="/admin/viewGenre"  element={<ShowGenre  />}>
+                <Link to="/admin/viewGenre" element={<ShowGenre />}>
                   <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
                     Genres
                   </span>
                 </Link>
-                <Link to="/admin/viewAuthors"  element={<ShowAuthors/>}>
+                <Link to="/admin/viewAuthors" element={<ShowAuthors />}>
                   <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
                     Authors
                   </span>
@@ -115,12 +118,86 @@ function SideBar() {
           </div>
         </li>
 
-        <li className="mb-4">
-        <span
+        <li className="w-full ">
+          <span
+            onClick={() => handleToggle("event")}
+            className="block px-6 py-2 rounded-lg hover:bg-gray-700"
+          >
+            Event
+          </span>
+          <div className=" px-10 ">
+            {toggleDown.event && (
+              <>
+                <Link to="/admin/addEvent" element={<AddEvent />}>
+                  <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
+                    Add Event
+                  </span>
+                </Link>
+              
+                <Link to="/admin/viewEvent" element={<ViewEvent />}>
+                  <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
+                    View Event
+                  </span>
+                </Link>
+              </>
+            )}
+          </div>
+        </li>
+
+        <li className="w-full ">
+          <span
+            onClick={() => handleToggle("blog")}
+            className="block px-6 py-2 rounded-lg hover:bg-gray-700"
+          >
+            Blog
+          </span>
+
+          <div className=" px-10 ">
+            {toggleDown.blog && (
+              <>
+               
+                <Link to="/admin/addBlog" element={<AddBlog />}>
+                  <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
+                    Add Blog
+                  </span>
+                </Link>
+                {/* <Link to="/admin/viewBlog" element={<AddBlog />}>
+                  <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
+                    Add Blog
+                  </span>
+                </Link> */}
+              </>
+            )}
+          </div>
+        </li>
+
+        <li className="w-full ">
+          <span
+            onClick={() => handleToggle("profile")}
+            className="block px-6 py-2 rounded-lg hover:bg-gray-700"
+          >
+            Profile
+          </span>
+          <div className=" px-10 ">
+            {toggleDown.profile && (
+              <>
+                <Link to="/admin/profile" element={<Profile />}>
+                  <span className="block px-6 py-2 rounded-lg hover:bg-gray-600 ">
+                    Profile
+                  </span>
+                </Link>
+
+              </>
+            )}
+          </div>
+
+        </li>
+        <li className="w-full">
+          <span
             onClick={() => handleToggle("circulation")}
             className="block px-6 py-2 rounded-lg hover:bg-gray-700"
           >
-             Circulation Section
+            Circulation Section
           </span>
           <div className=" px-10 ">
             {toggleDown.circulation && (
@@ -136,16 +213,17 @@ function SideBar() {
                     Return/Renew
                   </span>
                 </Link>
-              
               </>
             )}
           </div>
         </li>
+
+      
       </ul>
       <div className="px-6 py-4">
         <span className="block text-gray-400 hover:text-white ">Logout</span>
       </div>
-        </div>
+    </div>
   );
 }
 

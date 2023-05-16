@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 
-import NavMenu from "../../components/UserNavigation";
 import Footer from "../../components/Footer";
 import BackgroundBanner from "../../components/BackgroundBanner";
-import { fetchBook } from "../../services/userServiceHelpers";
-import {  setBooks } from "../../store/store";
-import { useNavigate } from "react-router-dom";
+import AuthorArticles from "../../components/AuthorArticles";
+import EventComponent from "../../components/EventComponent";
+import EmailAskusSupport from "../../components/EmailAskusSupport";
 
 function LandingPage() {
 
-  const navigate = useNavigate()
   
 
   return (
     <>
-      <NavMenu />
       <BackgroundBanner />
-      <button className="p-5 bg-black text-white" onClick={()=> navigate('/books') }> hello</button>
+      <AuthorArticles />
+      <EventComponent />
+      <EmailAskusSupport />
+
+      
       <Footer />
     </>
   );

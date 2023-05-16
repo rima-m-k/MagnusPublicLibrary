@@ -38,6 +38,18 @@ const addAuthor = async (req, res) => {
   }
 };
 
+async function getAuthorData(req, res) {
+  try {
+    let authors = await AUTHOR.find();
+    res.json(authors);
+  } catch (error) {
+    console.log(error);
+    console.log("Internal server error");
+    res.status(500).send({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   addAuthor,
+  getAuthorData
 };

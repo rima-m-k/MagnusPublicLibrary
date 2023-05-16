@@ -11,6 +11,9 @@ module.exports = {
             useUnifiedTopology:true,
           })
         .then(() =>console.log("connected to Database"))
-        .catch((err) =>console.log(err))
+        .catch((err) =>{
+            console.log(err)
+            // new AppError(500,"Unable to connect to Database")
+        })
     },
 }; 

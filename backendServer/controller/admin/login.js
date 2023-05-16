@@ -9,42 +9,32 @@ const login = async (req, res) => {
 
         let email = req.body.email.trim();
         let password = req.body.password.trim();
-        let designationID = req.body.designationID.trim();
+        // let designationID = req.body.designationID.trim();
         const createToken = (id) => {
-            return jwt.sign({id} , 'magnus public library' )
+            return jwt.sign({ id }, process.env.SECRET_KEY)
         }
-        let admin = await STAFFDATA.find({email: email}).populate("designationID");
-        if (admin.length === 0) {
-            res.status(401).send({message: "Email not found"});
+        let staff = await STAFFDATA.findOne({ email: email }).populate("designationID");
+        if (staff.length === 0) { 
+            res.status(401).send({ message: "Email not found" });
         } else {
-            
-            console.log(admin[0].designationID.designatinId)
-            
-            let comparepassword = await bcrypt.compare(password, admin[0].password)
-            if (email === admin[0].email) { 
-                console.log(comparepassword)
+
+
+            let comparepassword = await bcrypt.compare(password, staff.password)
+            if (email === staff.email) {
                 if (comparepassword) {
-                    console.log(designationID,"desID")
-                    console.log(admin[0].designationID.designation,"des name")
-                    if (designationID === admin[0].designationID.designationId) {
-                         // res.cookie('token ', token); or local storage
-                        const token= createToken(admin[0]._id)
-                        // res.cookie('jwt ', token);
-                        console.log(token)
+                        const token = createToken(staff._id)
                         res.json({
                             token: token,
-                            data:{email},
-                             message: "logged in successfully"});
+                            designationID:staff.designationID.designationId,
+                            message: "logged in successfully"
+                        });
 
-                    } else {
-                        console.log(admin[0].designationID.designatinId)
-                        res.status(401).send({message: "invalid id"});
-                    }
+                   
                 } else {
-                    res.status(401).send({message: "invalid password"});
+                    res.status(401).send({ message: "invalid password" });
                 }
-            } else { 
-                res.status(401).send({message: "email not found"});
+            } else {
+                res.status(401).send({ message: "email not found" });
             }
 
             // catch ((error) => {
@@ -52,9 +42,9 @@ const login = async (req, res) => {
             // });
         }
     } catch (error) {
-        console.log(error);
         console.log("Internal server error")
-        res.status(500).send({message: "Internal server error"});
-      }
+        console.log(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
 };
 module.exports = login;

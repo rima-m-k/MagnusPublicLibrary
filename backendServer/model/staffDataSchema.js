@@ -27,6 +27,10 @@ const staffData = new mongoose.Schema({
     image: {
         type: String,
 
+    },
+    isBlocked: {
+        type: Boolean,
+        default:false
     }
 })
 

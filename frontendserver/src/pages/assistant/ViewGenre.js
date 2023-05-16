@@ -3,10 +3,12 @@
 
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { getGenre } from "../../services/adminServiceHelpers";
-import AsstNavigationBar from "../../components/AsstNavigationBar";
+import { getGenre } from "../../services/assistantServiceHelpers";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 function ViewGenre() {
+  const Navigate = useNavigate()
   const [genres, setGenres] = useState([]);
   const [error, setError] = useState("");
   const [search,setSearch] = useState("")
@@ -21,6 +23,19 @@ function ViewGenre() {
       .catch((err) => {
         console.log(err);
         setError(err.response);
+        if(err.response.data.error==="Blocked By Admin"){
+          toast.error("Blocked By Admin", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          Navigate('/admin/staffPortal')
+        }
       });
   }, []);
   useEffect(() => {
@@ -70,7 +85,6 @@ setFilteredData(result)
 
   return (
     <>
-      <AsstNavigationBar />
           <DataTable
             title="Genre Catalogue"
             columns={columns}

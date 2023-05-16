@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import NavMenu from '../../components/UserNavigation';
 import { Link } from 'react-router-dom';
 import { fetchBook } from '../../services/userServiceHelpers';
 
@@ -15,13 +14,12 @@ console.log(  books)
 
   return (
     <>
-    <NavMenu />
     <div className='container'>
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-7 gap-10 m-4 sm:px-2 md:px-4 lg:px-8 mt-4">
  {books.map(book => (
     <div key={book.id} className="bg-white shadow overflow-hidden sm:rounded-lg">
         <Link to={`/books/${book._id}`} >    
-          <img src={`http://localhost:8000/Images/${book.image[0].frontCover[0].filename}`} alt={book.title} className="h-48 w-full object-cover" />
+          <img src={`https://res.cloudinary.com/dtbd0liga/image/upload/v1683611856/${book.image}`} alt={book.title} className="h-48 w-full object-cover" />
         </Link>
 
       <div className="px-4 py-2">

@@ -34,6 +34,18 @@ const addGenre = async (req, res) => {
     });
   }
 };
+
+async function viewGenre(req, res) {
+  try {
+    let genreData = await GENRE.find({});
+    res.json(genreData);
+  } catch (error) {
+    console.log(error);
+    console.log("Internal server error");
+    res.status(500).send({ message: "Internal server error" });
+  }
+}
 module.exports = {
   addGenre,
+  viewGenre
 };

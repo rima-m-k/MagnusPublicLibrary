@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { addAuthor } from "../services/assistantServiceHelpers";
-import { checkName, checkCode, checkDate,checkNationality ,checkTextarea} from "../validation/addAuthorValidations";
+import { checkName, checkCode, checkDate,checkNationality ,checkTextarea} from "../validation/FormValidation";
 import { toast } from "react-toastify";
 import spinner from "../spinner/Spinner.gif";
+import { useNavigate } from "react-router-dom";
 
 function AddAuthorForm() {
+  const Navigate = useNavigate()
     //////////////////////////////////////////////////declaring states/////////////////////////////////////////////////////////////
     const [authorData, setAuthorData] = useState({
       AuthorName: "",
@@ -54,6 +56,19 @@ function AddAuthorForm() {
           .catch((err) => {
             console.log(err);
             setError(err.response.data.message);
+            if(err.response.data.error==="Blocked By Admin"){
+              toast.error("Blocked By Admin", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+              Navigate('/admin/staffPortal')
+            }
           })
           .finally(() => {
             setIsLoading(false);

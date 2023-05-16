@@ -15,7 +15,6 @@ function App() {
         <Route path="/asst/*" element={<AssistantRoutes />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
-
       <ToastContainer />
     </div>
   );

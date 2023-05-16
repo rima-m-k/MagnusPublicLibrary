@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SideBar from "../../components/AdminSideBar";
 import { checkout, fetchBookTitle, findUser } from "../../services/adminServiceHelpers";
+import Spinner from "../../components/Spinner";
 
 function CheckOut() {
+  const [isLoasing,setIsLoading] = useState(false)
 
  const [checkoutData,setcheckoutData] = useState({
   bookID: '',
@@ -41,7 +42,7 @@ setError(err.response.message)
  console.log(userData._id)
 function handleSubmit(e){
   e.preventDefault();
-  
+  setIsLoading(true)
   checkout({ ...checkoutData, userID: userData._id })
   .then(res =>{
     console.log(res)
@@ -49,14 +50,12 @@ function handleSubmit(e){
   .catch(err =>{
     console.log(err)
   })
+  .finally(() => setIsLoading(false))
+
 }
  
   return (
-    <div className="flex  min-w-screen bg-gray-200">
-      <SideBar />
-
-      <div className="flex-grow  min-h-screen mt-5">
-        {/*  */}
+   
         <div className="flex flex-wrap ">
           <div className="w-full md:w-2/3 px-4 ">
         <h1 className="text-center text-3xl font-bold  py-4  text-custom-blue">
@@ -113,7 +112,7 @@ function handleSubmit(e){
                     className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
 
-
+{isLoasing ?<Spinner isUser = {false} /> :null }
 
                   <button 
                   className="p-2 mx-3 bg-blue-800 rounded-lg hover:bg-blue-700 text-white" 
@@ -187,9 +186,7 @@ function handleSubmit(e){
           </div>
         </div>
       </div>
-    </div>
-    
-    </div>
+   
     
   );
 }

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import SideBar from "../../components/AdminSideBar";
 import DataTable from "react-data-table-component";
 import { getUsers } from "../../services/adminServiceHelpers";
+import Spinner from '../../components/Spinner'
 
 function ViewUsers() {
+  const [isLoasing,setIsLoading] = useState(false)
+
     const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
     const [search,setSearch] = useState("")
     const [filteredData,setFilteredData] = useState([])
     useEffect(() => {
+    setIsLoading(true)
+
       getUsers()
         .then((res) => {
           console.log(res);
@@ -18,7 +22,9 @@ function ViewUsers() {
         .catch((err) => {
           console.log(err);
           setError(err.response);
-        });
+        })
+    .finally(() => setIsLoading(false))
+    
     }, []);
     useEffect(() => {
   const result = users.filter(user => user.name.toLowerCase().match(search.toLowerCase()))
@@ -38,7 +44,7 @@ function ViewUsers() {
       },
       {
         name: "Photo",
-        selector: (row) => row.profilePhoto,
+        selector: (row) =><img className="w-16" src={`https://res.cloudinary.com/dtbd0liga/image/upload/v1683611856/${row.profilePhoto}`} alt="User profile" /> ,
         width:'300px',
        wrap:true,
        allowOverflow:false,
@@ -77,10 +83,8 @@ function ViewUsers() {
   
     return (
       <>
-        <div className="flex h-screen bg-gray-200">
-          <SideBar />
-          <div className="flex-grow p-6 max-w-screen">
-            
+           {!isLoasing ?
+        
             <DataTable
               title="Users"
               columns={columns}
@@ -113,8 +117,11 @@ function ViewUsers() {
                 // noTableHead={true}
                 // fixedHeaderScrollHeight='450px'
             />
-          </div>
-        </div>
+            :
+        
+<Spinner isUser = {false} /> 
+          }
+         
       </>
     );
   }

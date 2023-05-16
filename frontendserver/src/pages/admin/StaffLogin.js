@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import { staffLogin } from "../../services/adminServiceHelpers";
 import { checkEmail, checkPassword } from "../../validation/FormValidation";
+import Spinner from "../../components/Spinner";
 
 function StaffLogin() {
+  const [isLoasing,setIsLoading] = useState(false)
+
   let [formData, setFormData] = useState({
     email: "",
     password: "",
-    designationID: "",
   }); 
  const [emailError,setEmailError] = useState('')
  const [passwordError,setPasswordError] = useState('')
@@ -23,18 +25,18 @@ function StaffLogin() {
 
   function handleSubmit(e) {
     e.preventDefault();
-(formData.designationID==='LBN01') ?staffLogin(formData).then(() => Navigate("/admin/dashboard")):staffLogin(formData).then(() => Navigate("/asst/dashboard"))
-
-      
+    setIsLoading(true)
+    staffLogin(formData)
     .then((res) => {
-      const data = {
-        ...res.data.data,
-        token: res.data.token,
-      };
-      console.log(data)
-      localStorage.setItem("currentUser", JSON.stringify(data));
+      if(res.data.designationID==="LBN01"){ 
+        localStorage.setItem("AdminData", JSON.stringify(res.data.token));
+        Navigate("/admin/dashboard")
+      }else if(res.data.designationID==="ASI01"){
+      localStorage.setItem("AsstData", JSON.stringify(res.data.token));
+      Navigate("/asst/dashboard")
+      }
+
     })
-      .then(() => Navigate("/admin/dashboard"))
       .catch((err) => {
         console.log(err)
         if (err.code === 'ECONNABORTED') {
@@ -51,7 +53,8 @@ function StaffLogin() {
           });
         }
 
-      });
+      })
+      .finally(() => setIsLoading(false))
   }
 
   return (
@@ -82,7 +85,7 @@ function StaffLogin() {
             </label>
             <input
               type="email"
-              name="email"
+              name="email" 
               id="eamil"
               value={formData.email}
               onChange={handleFormData}
@@ -93,6 +96,7 @@ function StaffLogin() {
                           {emailError && <span className="text-red-600"> {emailError}</span>}
 
           </div>
+          {isLoasing ?<Spinner isUser = {false} /> :null }
           <div className="mb-4">
             <label htmlFor="password" className="block font-medium mb-2">
               Password
@@ -106,26 +110,13 @@ function StaffLogin() {
               value={formData.password}
               onChange={handleFormData}
               required
-              onClick={e => setPasswordError(checkPassword(e.target.value))}
+              // onClick={e => setPasswordError(checkPassword(e.target.value))}
               className="border-gray-400 bg-gray-100 border-b-2 block w-full rounded py-2 px-3 mb-1"
             />
                           {passwordError && <span className="text-red-600"> {passwordError}</span>}
 
           </div>
-          <div className="mb-4">
-            <label htmlFor="designationID" className="block font-medium mb-2">
-              Designation Id
-            </label>
-            <input
-              type="text"
-              name="designationID"
-              id="designationID"
-              value={formData.designationID}
-              onChange={handleFormData}
-              required
-              className="border-gray-400 bg-gray-100 border-b-2 block w-full rounded py-2 px-3 mb-1"
-            />
-          </div>
+         
           {error ? <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">{error}</div> : null}
           <button
             type="submit"
