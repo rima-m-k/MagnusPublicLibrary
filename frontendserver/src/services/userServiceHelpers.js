@@ -1,6 +1,9 @@
 import axios from "axios";
-const instance = axios.create({baseURL: 'http://localhost:8000/', timeout: 30000, headers: {   Authorization: `Bearer ${localStorage.getItem('currentUser')}`} ,withCredentials: true,});
-const client   = axios.create({baseURL: 'http://localhost:8000/' , timeout: 30000,  headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`, 'Content-Type': 'multipart/form-data'} ,withCredentials: true,});
+// const instance = axios.create({baseURL: 'http://13.50.221.153:8000/', timeout: 30000, headers: {   Authorization: `Bearer ${localStorage.getItem('currentUser')}`} ,withCredentials: true,});
+// const client   = axios.create({baseURL: 'http://13.50.221.153:8000/' , timeout: 30000,  headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`, 'Content-Type': 'multipart/form-data'} ,withCredentials: true,});
+const instance = axios.create({baseURL: 'https://api.magnuspubliclibrary.tech', timeout: 30000, headers: {   Authorization: `Bearer ${localStorage.getItem('currentUser')}`} ,withCredentials: true,});
+const client   = axios.create({baseURL: 'https://api.magnuspubliclibrary.tech' , timeout: 30000,  headers: {   Authorization: `Bearer ${localStorage.getItem("currentUser")}`, 'Content-Type': 'multipart/form-data'} ,withCredentials: true,});
+
 
 const  userSignup = (userData) =>   instance.post('/userSignup',userData);
 const OTPverification = (userData) => instance.put('/userSignup',userData) 
