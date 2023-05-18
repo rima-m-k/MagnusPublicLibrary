@@ -17,14 +17,15 @@ const bookLoan = new mongoose.Schema({
       dateOfBorrow: {
         type: Date,
       },
-      renewDates:Array, 
+      renewDates: Array,
       dateOfReturn: {
         type: Date,
       },
-
+      expectedDOR: Date,
       fine: {
         type: Number,
       },
+      hasReturned:Boolean
     },
   ],
 });

@@ -72,7 +72,6 @@ function ViewBooks() {
     placeHold(bookingData)
       .then((res) => {
         console.log(res)
-
         toast.success(res.data.message, {
           position: "top-right",
           autoClose: 3000,
@@ -83,14 +82,10 @@ function ViewBooks() {
           progress: undefined,
           theme: "light",
         });
-
-
-
       })
       .catch((err) => {
         console.log(err);
         if (err.response.status === 409 || err.response.status === 403 || err.response.status === 500) {
-
           toast.error(err.response.data.message, {
             position: "top-right",
             autoClose: 3000,
@@ -101,7 +96,6 @@ function ViewBooks() {
             progress: undefined,
             theme: "light",
           });
-
         }
       })
       .finally(() => {

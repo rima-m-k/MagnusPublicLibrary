@@ -13,6 +13,7 @@ import ViewEvent from "../pages/user/ViewEvent";
 import UserNavigation from '../components/UserNavigation'
 import BookEvent from "../pages/user/BookEvent";
 import Community from "../pages/user/Community";
+import PaymentSuccess from "../pages/user/PaymentSuccess";
 
 function UserRoutes() {
   const Navigate = useNavigate()
@@ -37,6 +38,7 @@ const [userName,setUserName] = useState('')
         <Route path="/viewEvent/:id" element={<ViewEvent />} />
         <Route path="/bookEvent/:id" element={token?<BookEvent /> : <Navigate to ={'/login'} />}  />
         <Route path="/community" element={<Community />} />
+        <Route path="/payment" element={token?<PaymentSuccess /> : <Navigate to ={'/login'} />}  />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>

@@ -14,9 +14,8 @@ async function addEvent(req, res) {
       req.body.venue
     ) {
 
-console.log(req.file)
       let flag = 0;
-let findVenue = await LIBRARYDATA.findOne({"venue.name":req.body.venue}, { "venue.$": 1 })
+      let findVenue = await LIBRARYDATA.findOne({ "venue.name": req.body.venue }, { "venue.$": 1 })
 
 
       const checkEventName = await EVENT.findOne({ name: req.body.name });
@@ -31,11 +30,9 @@ let findVenue = await LIBRARYDATA.findOne({"venue.name":req.body.venue}, { "venu
           let B = new Date(`1970-01-01T${checkEventDate.endTime}`);
           let C = new Date(`1970-01-01T${req.body.startTime}`);
           let D = new Date(`1970-01-01T${req.body.endTime}`);
-         
+
           const overlapsWithSecond = A <= D && B >= C;
           const overlapsWithFirst = A >= D && B <= C;
-          console.log(overlapsWithFirst, "first");
-          console.log(overlapsWithSecond, "sec");
           if (overlapsWithFirst || overlapsWithSecond) {
             flag = 0;
           } else {
@@ -55,12 +52,13 @@ let findVenue = await LIBRARYDATA.findOne({"venue.name":req.body.venue}, { "venu
             fees: req.body.fees,
             status: "Upcoming",
             totalSeat: findVenue.venue[0].capacity,
+            availableSeat:findVenue.venue[0].capacity,
             venue: req.body.venue,
-            banner:req.file.filename
+            banner: req.file.filename
           });
-          newEvent.save(); 
+          newEvent.save();
           console.log("saved");
-          res.status(200).send({ message: "event added" });
+          res.status(200).send({ message: "Event added" });
         } else {
           console.log("Unable to book event in the given time");
           res.status(409).send({ message: "Unable to book event in the given time" });
@@ -79,23 +77,15 @@ let findVenue = await LIBRARYDATA.findOne({"venue.name":req.body.venue}, { "venu
 }
 
 
-async function fetchVenue(req,res){
-  let venueData= await LIBRARYDATA.find({},{venue:1})
+async function fetchVenue(req, res) {
+  let venueData = await LIBRARYDATA.find({}, { venue: 1 })
   res.json(venueData)
 }
 
 
 module.exports = { addEvent, fetchVenue };
 
-// {
-//   name: 'ss',
-//   date: '2023-05-25',
-//   startTime: '00:00',      12:00
-//   endTime: '03:00',        15:00
-//   host: 'Admin',
-//   description: 's',
-//   fees: '45'
-// }
+
 
 //  status :Upcoming, In progress , Ended , Postponed, Cancelled, Sold out, Registration closed
 

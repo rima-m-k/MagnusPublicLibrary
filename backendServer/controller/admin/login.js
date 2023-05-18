@@ -22,12 +22,20 @@ const login = async (req, res) => {
             let comparepassword = await bcrypt.compare(password, staff.password)
             if (email === staff.email) {
                 if (comparepassword) {
-                        const token = createToken(staff._id)
-                        res.json({
-                            token: token,
-                            designationID:staff.designationID.designationId,
-                            message: "logged in successfully"
-                        });
+if(staff.isBlocked){
+    res.status(401).send({ message: "Blocked" });
+
+}else{
+    const token = createToken(staff._id)
+    res.json({
+        token: token,
+        designationID:staff.designationID.designationId,
+        message: "logged in successfully"
+    });
+}
+
+
+                       
 
                    
                 } else {

@@ -37,9 +37,6 @@ const placeHold = async (req, res) => {
         let available = CheckBook.copy - (CheckBook.onHold + CheckBook.borrowed)
         console.log(available, "available")
         if (available > 0) {
-
-
-
             let ONHold = await ONHOLD.findOne({ user: req.ID });
             if (!ONHold) {
                 //first time holding a book

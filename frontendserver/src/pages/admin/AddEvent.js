@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { addEvent, fetchVenue } from "../../services/adminServiceHelpers";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 
 function AddEvent() {
   const [isLoasing,setIsLoading] = useState(false)
@@ -24,7 +25,6 @@ function AddEvent() {
     fetchVenue()
       .then(res => setVenueData(res.data))
   }, [])
-  // console.log(  venueData?.[0]?.venue)
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true)
@@ -42,13 +42,32 @@ function AddEvent() {
     addEvent(data)
       .then((res) => {
         console.log(res);
+        toast.success(res.data.message, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setEventData({  name: "", date: "", startTime: "", endTime: "", host: "Admin", description: "", fees: "", venue: "", photo:""})
       })
       .catch((err) => {
         console.log(err, "ss")
         if (err.response.status === 409 || err.response.status === 500) {
-          console.log(err.response.data.message)
-          setError(err.response.data.message)
-        }
+          // console.log(err.response.data.message)
+          toast.error(err.response.data.message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });        }
       })
       .finally(() => setIsLoading(false))
 
@@ -143,7 +162,7 @@ function AddEvent() {
                 placeholder="Enter event Starting time"
                 value={eventData.startTime}
                 onChange={handleChange}
-              />
+              /> 
             </div>
             <div className="mb-6">
               <label
