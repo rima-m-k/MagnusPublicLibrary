@@ -133,7 +133,7 @@ async function payment(req, res) {
 
             console.log("object")
             res.redirect(
-                `http://magnuspubliclibrary.tech/payment?reference=${razorpay_payment_id}`
+                `https://magnuspubliclibrary.tech/payment?reference=${razorpay_payment_id}`
                 // `http://localhost:3000/payment?reference=${razorpay_payment_id}`
             );
         } else {
